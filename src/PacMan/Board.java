@@ -9,6 +9,7 @@ public class Board extends JPanel {
     private int height;
     private int width;
     private Game game;
+    private Timer movementTimer;
 
 
     public Board(int height, int width) {
@@ -30,11 +31,12 @@ public class Board extends JPanel {
             }
         });
 
-
+        int delay = 200;
+        movementTimer = new Timer(delay, e -> {
+            game.movePacMan();
+            repaint();
+        });
+        movementTimer.start();
 
     }
-
-
-
-
 }

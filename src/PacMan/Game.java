@@ -11,5 +11,8 @@ public class Game {
         this.r = r;
     }
 
+    public void movePacMan() {
+
+    }
 
 }
