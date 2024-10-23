@@ -15,6 +15,8 @@ public class Board extends JPanel {
     private int moveDirection = KeyEvent.VK_LEFT;
 
 
+
+
     public Board(int height, int width) {
         setFocusable(true);
         requestFocusInWindow();
@@ -73,14 +75,7 @@ public class Board extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int d = 5;
         g.setColor(Color.blue);
-        g.drawLine(d, d, d, height - d);
-        g.drawLine(d, d, width - d, d);
-        g.drawLine(d, height - d, width - d, height - d);
-        g.drawLine(width - d, height - d, width - d, d);
-
-
 
 
     }
