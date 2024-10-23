@@ -14,7 +14,6 @@ public class Main {
         jframe.pack();
         jframe.setVisible(true);
 
-        boolean[][] meow = MyFileReader.createPacManMap();
 
     }
 }

@@ -13,6 +13,7 @@ public class Board extends JPanel {
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
     private int moveDirection = KeyEvent.VK_LEFT;
+    boolean [][] pacManMap = MyFileReader.createPacManMap();
 
 
 
@@ -76,6 +77,16 @@ public class Board extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.blue);
+
+
+        for (int i = 0; i < pacManMap.length; i++) {
+            for (int j = 0; j < pacManMap[i].length; j++) {
+                if (pacManMap[i][j]) {
+                    g.fillRect(j*50, i*50, 50, 50);
+                }
+
+            }
+        }
 
 
     }
