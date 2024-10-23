@@ -4,12 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 public class Board extends JPanel {
     private int height;
     private int width;
     private Game game;
     private Timer movementTimer;
+    private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
+    private int moveDirection = KeyEvent.VK_LEFT;
 
 
     public Board(int height, int width) {
@@ -27,6 +30,33 @@ public class Board extends JPanel {
             public void keyPressed(KeyEvent ke) {
                 int keyCode = ke.getKeyCode();
 
+                switch (keyCode) {
+                    case KeyEvent.VK_LEFT:
+                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.RIGHT)) {
+                            return;
+                        }
+                        moveDirection = KeyEvent.VK_LEFT;
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.LEFT)) {
+                            return;
+                        }
+                        moveDirection = KeyEvent.VK_RIGHT;
+                        break;
+                    case KeyEvent.VK_UP:
+                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.DOWN)) {
+                            return;
+                        }
+                        moveDirection = KeyEvent.VK_UP;
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.UP)) {
+                            return;
+                        }
+                        moveDirection = KeyEvent.VK_DOWN;
+                        break;
+                }
+
 
             }
         });
@@ -39,4 +69,21 @@ public class Board extends JPanel {
         movementTimer.start();
 
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int d = 5;
+        g.setColor(Color.blue);
+        g.drawLine(d, d, d, height - d);
+        g.drawLine(d, d, width - d, d);
+        g.drawLine(d, height - d, width - d, height - d);
+        g.drawLine(width - d, height - d, width - d, d);
+
+
+
+
+    }
+
+
 }

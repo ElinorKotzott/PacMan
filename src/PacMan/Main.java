@@ -7,7 +7,7 @@ public class Main {
 
 
         JFrame jframe = new JFrame("EllysPacManGame");
-        Board board = new Board(600, 500);
+        Board board = new Board(610, 510);
 
         jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jframe.add(board);

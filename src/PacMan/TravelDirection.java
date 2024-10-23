@@ -14,4 +14,8 @@ public class TravelDirection {
     public void setTravelDir(Direction travelDir) {
         this.travelDir = travelDir;
     }
+
+    public Direction getTravelDirection() {
+        return travelDir;
+    }
 }
