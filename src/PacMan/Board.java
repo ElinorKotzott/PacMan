@@ -13,9 +13,12 @@ public class Board extends JPanel {
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
     private int moveDirection = KeyEvent.VK_LEFT;
-    boolean [][] pacManMap = MyFileReader.createPacManMap();
-
-
+    boolean[][] pacManMap = MyFileReader.createPacManMap();
+    private int componentSize = 50;
+    private int pacManSize = 40;
+    private int foodSize = 4;
+    private int boosterSize = 10;
+    private int ghostSize = 30;
 
 
     public Board(int height, int width) {
@@ -76,20 +79,27 @@ public class Board extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.blue);
+
 
 
         for (int i = 0; i < pacManMap.length; i++) {
             for (int j = 0; j < pacManMap[i].length; j++) {
                 if (pacManMap[i][j]) {
-                    g.fillRect(j*50, i*50, 50, 50);
-                }
+                    g.setColor(Color.blue);
+                    g.fillRect(j * componentSize, i * componentSize, componentSize, componentSize);
 
+                } else {
+                    g.setColor(Color.orange);
+                g.fillOval(j*componentSize+(componentSize/2 - foodSize/2), i*componentSize+(componentSize/2-foodSize/2), foodSize, foodSize);
+                // TODO add another food component between each already existing food component
+                }
             }
+
         }
+
+        g.setColor(Color.yellow);
+        g.fillOval(205, 455, 40, 40);
 
 
     }
-
-
 }
