@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Board extends JPanel {
@@ -13,12 +15,14 @@ public class Board extends JPanel {
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
     private int moveDirection = KeyEvent.VK_LEFT;
-    boolean[][] pacManMap = MyFileReader.createPacManMap();
-    private int componentSize = 50;
+    boolean[][] pacManArray = MyFileReader.createPacManMap();
+    private int elementSize = 50;
     private int pacManSize = 40;
-    private int foodSize = 4;
+    private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 30;
+    private List<Component> foodComponentsList = new ArrayList<>();
+    private Component pacMan;
 
 
     public Board(int height, int width) {
@@ -29,6 +33,16 @@ public class Board extends JPanel {
         this.height = height;
         this.width = width;
         game = new Game(this::repaint, height, width);
+        pacMan = new Component(205, 455);
+        // TODO add another food component between each already existing food component.
+
+        for (int i = 0; i < pacManArray.length; i++) {
+            for (int j = 0; j < pacManArray[i].length; j++) {
+                if (!pacManArray[i][j]) {
+                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize));
+                }
+            }
+        }
 
 
         addKeyListener(new KeyAdapter() {
@@ -69,7 +83,7 @@ public class Board extends JPanel {
 
         int delay = 200;
         movementTimer = new Timer(delay, e -> {
-            game.movePacMan();
+            game.movePacMan(moveDirection, pacManArray, pacMan);
             repaint();
         });
         movementTimer.start();
@@ -80,25 +94,27 @@ public class Board extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-
-
-        for (int i = 0; i < pacManMap.length; i++) {
-            for (int j = 0; j < pacManMap[i].length; j++) {
-                if (pacManMap[i][j]) {
+int counter = 0;
+        for (int i = 0; i < pacManArray.length; i++) {
+            for (int j = 0; j < pacManArray[i].length; j++) {
+                if (pacManArray[i][j]) {
                     g.setColor(Color.blue);
-                    g.fillRect(j * componentSize, i * componentSize, componentSize, componentSize);
-
+                    g.fillRect(j*elementSize, i*elementSize, elementSize, elementSize);
                 } else {
                     g.setColor(Color.orange);
-                g.fillOval(j*componentSize+(componentSize/2 - foodSize/2), i*componentSize+(componentSize/2-foodSize/2), foodSize, foodSize);
-                // TODO add another food component between each already existing food component
+                    if (!foodComponentsList.get(counter).isBooster()) {
+                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getX(), foodComponentsList.get(counter).getCoordinate().getY(), smallFoodSize, smallFoodSize);
+                    } else {
+                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getX(), foodComponentsList.get(counter).getCoordinate().getY(), boosterSize, boosterSize);
+                    }
                 }
             }
-
         }
 
+
+
         g.setColor(Color.yellow);
-        g.fillOval(205, 455, 40, 40);
+        g.fillOval(pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY(), pacManSize, pacManSize);
 
 
     }
