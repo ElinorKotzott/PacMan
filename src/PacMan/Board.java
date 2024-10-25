@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class Board extends JPanel {
     private int height;
@@ -23,6 +24,8 @@ public class Board extends JPanel {
     private int ghostSize = 30;
     private List<Component> foodComponentsList = new ArrayList<>();
     private Component pacMan;
+    private int numberOfBoosters = 4;
+    private List<Integer> randomNumbersList;
 
 
     public Board(int height, int width) {
@@ -34,15 +37,9 @@ public class Board extends JPanel {
         this.width = width;
         game = new Game(this::repaint, height, width);
         pacMan = new Component(205, 455);
-        // TODO add another food component between each already existing food component.
-
-        for (int i = 0; i < booleanArray.length; i++) {
-            for (int j = 0; j < booleanArray[i].length; j++) {
-                if (!booleanArray[i][j]) {
-                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
-                }
-            }
-        }
+        fillFoodComponentsList();
+        createRandomNumbersList();
+        setBoosterStatusToTrue();
 
 
         addKeyListener(new KeyAdapter() {
@@ -94,12 +91,14 @@ public class Board extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-int counter = 0;
+        // TODO add another food component between each already existing food component
+
+        int counter = 0;
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (booleanArray[i][j]) {
                     g.setColor(Color.blue);
-                    g.fillRect(j*elementSize, i*elementSize, elementSize, elementSize);
+                    g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
                     g.setColor(Color.orange);
                     if (!foodComponentsList.get(counter).isBooster()) {
@@ -107,11 +106,11 @@ int counter = 0;
                         counter++;
                     } else {
                         g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
+                        counter++;
                     }
                 }
             }
         }
-
 
 
         g.setColor(Color.yellow);
@@ -119,4 +118,36 @@ int counter = 0;
 
 
     }
+
+    private List<Component> fillFoodComponentsList() {
+        for (int i = 0; i < booleanArray.length; i++) {
+            for (int j = 0; j < booleanArray[i].length; j++) {
+                if (!booleanArray[i][j]) {
+                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
+                }
+            }
+        }
+        return foodComponentsList;
+    }
+
+
+    private List<Integer> createRandomNumbersList() {
+        randomNumbersList = new ArrayList();
+        Random random = new Random();
+        while (randomNumbersList.size() < numberOfBoosters) {
+            int randomNumber = random.nextInt(foodComponentsList.size());
+            if (!randomNumbersList.contains(randomNumber)) {
+                randomNumbersList.add(randomNumber);
+            }
+        }
+        return randomNumbersList;
+    }
+
+    private void setBoosterStatusToTrue() {
+        for (int i = 0; i < randomNumbersList.size(); i++) {
+            foodComponentsList.get(randomNumbersList.get(i)).setBooster(true);
+        }
+    }
+
+
 }
