@@ -15,7 +15,7 @@ public class Board extends JPanel {
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
     private int moveDirection = KeyEvent.VK_LEFT;
-    boolean[][] pacManArray = MyFileReader.createPacManMap();
+    boolean[][] booleanArray = MyFileReader.createPacManMap();
     private int elementSize = 50;
     private int pacManSize = 40;
     private int smallFoodSize = 4;
@@ -36,10 +36,10 @@ public class Board extends JPanel {
         pacMan = new Component(205, 455);
         // TODO add another food component between each already existing food component.
 
-        for (int i = 0; i < pacManArray.length; i++) {
-            for (int j = 0; j < pacManArray[i].length; j++) {
-                if (!pacManArray[i][j]) {
-                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize));
+        for (int i = 0; i < booleanArray.length; i++) {
+            for (int j = 0; j < booleanArray[i].length; j++) {
+                if (!booleanArray[i][j]) {
+                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
                 }
             }
         }
@@ -83,7 +83,7 @@ public class Board extends JPanel {
 
         int delay = 200;
         movementTimer = new Timer(delay, e -> {
-            game.movePacMan(moveDirection, pacManArray, pacMan);
+            game.movePacMan(moveDirection, booleanArray, pacMan);
             repaint();
         });
         movementTimer.start();
@@ -95,17 +95,18 @@ public class Board extends JPanel {
         super.paintComponent(g);
 
 int counter = 0;
-        for (int i = 0; i < pacManArray.length; i++) {
-            for (int j = 0; j < pacManArray[i].length; j++) {
-                if (pacManArray[i][j]) {
+        for (int i = 0; i < booleanArray.length; i++) {
+            for (int j = 0; j < booleanArray[i].length; j++) {
+                if (booleanArray[i][j]) {
                     g.setColor(Color.blue);
                     g.fillRect(j*elementSize, i*elementSize, elementSize, elementSize);
                 } else {
                     g.setColor(Color.orange);
                     if (!foodComponentsList.get(counter).isBooster()) {
-                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getX(), foodComponentsList.get(counter).getCoordinate().getY(), smallFoodSize, smallFoodSize);
+                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), smallFoodSize, smallFoodSize);
+                        counter++;
                     } else {
-                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getX(), foodComponentsList.get(counter).getCoordinate().getY(), boosterSize, boosterSize);
+                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
                     }
                 }
             }

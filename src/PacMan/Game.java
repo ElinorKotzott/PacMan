@@ -16,9 +16,9 @@ public class Game {
         this.r = r;
     }
 
-    public void movePacMan(int moveDirection, boolean[][] pacManArray, Component pacMan) {
+    public void movePacMan(int moveDirection, boolean[][] booleanArray, Component pacMan) {
 
-        if (moveDirection == LEFT_ARROW && !pacManArray[(int)pacMan.getCoordinate().getX()/componentSize][(int)pacMan.getCoordinate().getX()/componentSize]) {
+        if (moveDirection == LEFT_ARROW && !booleanArray[(int)pacMan.getCoordinate().getX()/componentSize][(int)pacMan.getCoordinate().getX()/componentSize]) {
 
         }
 
