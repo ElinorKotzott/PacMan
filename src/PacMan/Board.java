@@ -1,12 +1,14 @@
 package PacMan;
 
+import PacMan.sceneObjects.FoodSprite;
+import PacMan.sceneObjects.PacManSprite;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class Board extends JPanel {
@@ -22,9 +24,9 @@ public class Board extends JPanel {
     private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 30;
-    private List<Component> foodComponentsList = new ArrayList<>();
-    private Component pacMan;
-    private int numberOfBoosters = 4;
+    private List<FoodSprite> foodComponentsList = new ArrayList<>();
+    private PacManSprite pacMan;
+    private int numberOfBoosters = 3;
     private List<Integer> randomNumbersList;
 
 
@@ -36,7 +38,7 @@ public class Board extends JPanel {
         this.height = height;
         this.width = width;
         game = new Game(this::repaint, height, width);
-        pacMan = new Component(205, 455);
+        pacMan = new PacManSprite(455, 205);
         fillFoodComponentsList();
         createRandomNumbersList();
         setBoosterStatusToTrue();
@@ -49,27 +51,15 @@ public class Board extends JPanel {
 
                 switch (keyCode) {
                     case KeyEvent.VK_LEFT:
-                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.RIGHT)) {
-                            return;
-                        }
                         moveDirection = KeyEvent.VK_LEFT;
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.LEFT)) {
-                            return;
-                        }
                         moveDirection = KeyEvent.VK_RIGHT;
                         break;
                     case KeyEvent.VK_UP:
-                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.DOWN)) {
-                            return;
-                        }
                         moveDirection = KeyEvent.VK_UP;
                         break;
                     case KeyEvent.VK_DOWN:
-                        if (Objects.equals(travelDirection.getTravelDirection(), Direction.UP)) {
-                            return;
-                        }
                         moveDirection = KeyEvent.VK_DOWN;
                         break;
                 }
@@ -78,9 +68,9 @@ public class Board extends JPanel {
             }
         });
 
-        int delay = 200;
+        int delay = 10;
         movementTimer = new Timer(delay, e -> {
-            game.movePacMan(moveDirection, booleanArray, pacMan);
+            game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection.getTravelDirection());
             repaint();
         });
         movementTimer.start();
@@ -114,16 +104,16 @@ public class Board extends JPanel {
 
 
         g.setColor(Color.yellow);
-        g.fillOval(pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY(), pacManSize, pacManSize);
+        g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
 
     }
 
-    private List<Component> fillFoodComponentsList() {
+    private List<FoodSprite> fillFoodComponentsList() {
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (!booleanArray[i][j]) {
-                    foodComponentsList.add(new Component(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
+                    foodComponentsList.add(new FoodSprite(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
                 }
             }
         }

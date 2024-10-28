@@ -1,22 +1,13 @@
-package PacMan;
+package PacMan.sceneObjects;
+
+import PacMan.Coordinate;
 
 public class Component {
-    private int x;
-    private int y;
-    private boolean isBooster;
-    private Coordinate coordinate;
+
+    protected Coordinate coordinate;
 
     public Component(int x, int y) {
         this.coordinate = new Coordinate (x, y);
-    }
-
-
-    public boolean isBooster() {
-        return isBooster;
-    }
-
-    public void setBooster(boolean booster) {
-        isBooster = booster;
     }
 
     public Coordinate getCoordinate() {
