@@ -3,7 +3,10 @@ package PacMan;
 public class TravelDirection {
     private Direction travelDir;
 
-    public TravelDirection (Direction travelDirection) {
+    public TravelDirection() {
+    }
+
+    public TravelDirection(Direction travelDirection) {
         this.travelDir = travelDirection;
     }
 

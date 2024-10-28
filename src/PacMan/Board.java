@@ -16,8 +16,8 @@ public class Board extends JPanel {
     private int width;
     private Game game;
     private Timer movementTimer;
-    private TravelDirection travelDirection = new TravelDirection(Direction.LEFT);
-    private int moveDirection = KeyEvent.VK_LEFT;
+    private TravelDirection travelDirection = new TravelDirection();
+    private int moveDirection;
     boolean[][] booleanArray = MyFileReader.createPacManMap();
     private int elementSize = 50;
     private int pacManSize = 40;
@@ -70,7 +70,7 @@ public class Board extends JPanel {
 
         int delay = 10;
         movementTimer = new Timer(delay, e -> {
-            game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection.getTravelDirection());
+            game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
             repaint();
         });
         movementTimer.start();
