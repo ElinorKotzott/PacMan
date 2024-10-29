@@ -19,8 +19,8 @@ public class Board extends JPanel {
     private TravelDirection travelDirection = new TravelDirection();
     private int moveDirection;
     boolean[][] booleanArray = MyFileReader.createPacManMap();
-    private int elementSize = 50;
-    private int pacManSize = 40;
+    public static final int elementSize = 50;
+    private static int pacManSize = 40;
     private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 30;

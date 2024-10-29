@@ -3,17 +3,9 @@ package PacMan;
 import PacMan.sceneObjects.Component;
 import java.awt.event.KeyEvent;
 
-public class Game {
-    private Runnable r;
-    private int height;
-    private int width;
-    private int elementSize = 50;
+import static PacMan.Board.elementSize;
 
-    public Game(Runnable r, int height, int width) {
-        this.height = height;
-        this.width = width;
-        this.r = r;
-    }
+public class Game {
 
     public void movePacMan(int moveDirection, boolean[][] booleanArray, Component pacMan, TravelDirection d) {
 
@@ -69,25 +61,21 @@ public class Game {
     private void moveDown(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() + 1);
         d.setTravelDir(Direction.DOWN);
-        r.run();
     }
 
     private void moveUp(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() - 1);
         d.setTravelDir(Direction.UP);
-        r.run();
     }
 
     private void moveRight(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() + 1);
         d.setTravelDir(Direction.RIGHT);
-        r.run();
     }
 
     private void moveLeft(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() - 1);
         d.setTravelDir(Direction.LEFT);
-        r.run();
     }
 
     private boolean canMoveDown(boolean[][] booleanArray, Component pacMan) {
