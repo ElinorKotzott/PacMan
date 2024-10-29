@@ -147,14 +147,22 @@ public class Board extends JPanel {
     private void checkIfFoodIsEaten() {
         for (int i = 0; i < foodSpriteList.size(); i++) {
             if (foodSpriteList.get(i).getCoordinate().getX() / elementSize == pacMan.getCoordinate().getX() / elementSize
-                    && foodSpriteList.get(i).getCoordinate().getY() / elementSize == pacMan.getCoordinate().getY() / elementSize) {
-                if (foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
-                        && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() <= 25
-                        && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 10
-                        && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 20) {
-                    foodSpriteList.get(i).setEaten(true);
-                }
+                    && foodSpriteList.get(i).getCoordinate().getY() / elementSize == pacMan.getCoordinate().getY() / elementSize
+                    && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
+                    && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() <= 25
+                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 10
+                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 20) {
+                foodSpriteList.get(i).setEaten(true);
             }
         }
+    }
+
+    public boolean checkIfIsWin () {
+        for (int i = 0; i < foodSpriteList.size(); i++) {
+            if (!foodSpriteList.get(i).isEaten()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
