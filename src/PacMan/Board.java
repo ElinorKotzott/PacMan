@@ -95,6 +95,8 @@ public class Board extends JPanel {
                         g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), smallFoodSize, smallFoodSize);
                         counter++;
                     } else {
+                        foodComponentsList.get(counter).getCoordinate().setX(i * elementSize + elementSize / 2 - boosterSize / 2);
+                        foodComponentsList.get(counter).getCoordinate().setY(j * elementSize + elementSize / 2 - boosterSize / 2);
                         g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
                         counter++;
                     }

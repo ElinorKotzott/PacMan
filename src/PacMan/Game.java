@@ -109,5 +109,4 @@ public class Game {
         return !booleanArray[(pacMan.getCoordinate().getX() - 5) / elementSize][(pacMan.getCoordinate().getY() - 6) / elementSize]
                 && !booleanArray[(pacMan.getCoordinate().getX() + 44) / elementSize][(pacMan.getCoordinate().getY() - 6) / elementSize];
     }
-
 }
