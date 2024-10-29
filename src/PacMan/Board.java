@@ -93,6 +93,9 @@ public class Board extends JPanel {
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
                         counter++;
+                        if(checkIfIsWin()) {
+                            paintWinnerMessage(g);
+                        }
                         continue;
                     }
                     g.setColor(Color.orange);
@@ -165,4 +168,17 @@ public class Board extends JPanel {
         }
         return true;
     }
+
+    public void paintWinnerMessage(Graphics g) {
+        g.setColor(Color.white);
+        String winnerMessage = "Congrats, you won!";
+        Font font = new Font("Arial", Font.BOLD, 30);
+        g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics(font);
+        int x = (width - metrics.stringWidth(winnerMessage)) / 2;
+        int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
+        g.drawString(winnerMessage, x, y);
+    }
+
+
 }
