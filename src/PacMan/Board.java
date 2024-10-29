@@ -24,7 +24,7 @@ public class Board extends JPanel {
     private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 30;
-    private List<FoodSprite> foodComponentsList = new ArrayList<>();
+    private List<FoodSprite> foodSpriteList = new ArrayList<>();
     private PacManSprite pacMan;
     private int numberOfBoosters = 3;
     private List<Integer> randomNumbersList;
@@ -90,16 +90,20 @@ public class Board extends JPanel {
                     g.setColor(Color.blue);
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
-                    g.setColor(Color.orange);
-                    if (!foodComponentsList.get(counter).isBooster()) {
-                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), smallFoodSize, smallFoodSize);
+                    checkIfFoodIsEaten();
+                    if (foodSpriteList.get(counter).isEaten()) {
                         counter++;
-                    } else {
-                        foodComponentsList.get(counter).getCoordinate().setX(i * elementSize + elementSize / 2 - boosterSize / 2);
-                        foodComponentsList.get(counter).getCoordinate().setY(j * elementSize + elementSize / 2 - boosterSize / 2);
-                        g.fillOval(foodComponentsList.get(counter).getCoordinate().getY(), foodComponentsList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
-                        counter++;
+                        continue;
                     }
+                    g.setColor(Color.orange);
+                    if (!foodSpriteList.get(counter).isBooster()) {
+                        g.fillOval(foodSpriteList.get(counter).getCoordinate().getY(), foodSpriteList.get(counter).getCoordinate().getX(), smallFoodSize, smallFoodSize);
+                    } else {
+                        foodSpriteList.get(counter).getCoordinate().setX(i * elementSize + elementSize / 2 - boosterSize / 2);
+                        foodSpriteList.get(counter).getCoordinate().setY(j * elementSize + elementSize / 2 - boosterSize / 2);
+                        g.fillOval(foodSpriteList.get(counter).getCoordinate().getY(), foodSpriteList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
+                    }
+                    counter++;
                 }
             }
         }
@@ -108,18 +112,17 @@ public class Board extends JPanel {
         g.setColor(Color.yellow);
         g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
-
     }
 
     private List<FoodSprite> fillFoodComponentsList() {
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (!booleanArray[i][j]) {
-                    foodComponentsList.add(new FoodSprite(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
+                    foodSpriteList.add(new FoodSprite(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
                 }
             }
         }
-        return foodComponentsList;
+        return foodSpriteList;
     }
 
 
@@ -127,7 +130,7 @@ public class Board extends JPanel {
         randomNumbersList = new ArrayList();
         Random random = new Random();
         while (randomNumbersList.size() < numberOfBoosters) {
-            int randomNumber = random.nextInt(foodComponentsList.size());
+            int randomNumber = random.nextInt(foodSpriteList.size());
             if (!randomNumbersList.contains(randomNumber)) {
                 randomNumbersList.add(randomNumber);
             }
@@ -137,9 +140,21 @@ public class Board extends JPanel {
 
     private void setBoosterStatusToTrue() {
         for (int i = 0; i < randomNumbersList.size(); i++) {
-            foodComponentsList.get(randomNumbersList.get(i)).setBooster(true);
+            foodSpriteList.get(randomNumbersList.get(i)).setBooster(true);
         }
     }
 
-
+    private void checkIfFoodIsEaten() {
+        for (int i = 0; i < foodSpriteList.size(); i++) {
+            if (foodSpriteList.get(i).getCoordinate().getX() / elementSize == pacMan.getCoordinate().getX() / elementSize
+                    && foodSpriteList.get(i).getCoordinate().getY() / elementSize == pacMan.getCoordinate().getY() / elementSize) {
+                if (foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
+                        && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() <= 25
+                        && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 10
+                        && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 20) {
+                    foodSpriteList.get(i).setEaten(true);
+                }
+            }
+        }
+    }
 }
