@@ -20,7 +20,7 @@ public class Board extends JPanel {
     private int moveDirection;
     boolean[][] booleanArray = MyFileReader.createPacManMap();
     public static final int elementSize = 50;
-    private static int pacManSize = 40;
+    private final int pacManSize = 40;
     private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 30;
@@ -28,6 +28,8 @@ public class Board extends JPanel {
     private PacManSprite pacMan;
     private int numberOfBoosters = 3;
     private List<Integer> randomNumbersList;
+    private boolean gameOver;
+    private int freezePaintingCounter = 0;
 
 
     public Board(int height, int width) {
@@ -37,12 +39,11 @@ public class Board extends JPanel {
         setPreferredSize(new Dimension(width, height));
         this.height = height;
         this.width = width;
-        game = new Game(this::repaint, height, width);
+        game = new Game();
         pacMan = new PacManSprite(455, 205);
         fillFoodComponentsList();
         createRandomNumbersList();
         setBoosterStatusToTrue();
-
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -63,15 +64,20 @@ public class Board extends JPanel {
                         moveDirection = KeyEvent.VK_DOWN;
                         break;
                 }
-
-
             }
         });
 
-        int delay = 10;
+        int delay = 1;
         movementTimer = new Timer(delay, e -> {
-            game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
-            repaint();
+            if (!gameOver) {
+                game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
+                repaint();
+            } else {
+                freezePaintingCounter++;
+                if (freezePaintingCounter == 150.000) {
+                    System.exit(0);
+                }
+            }
         });
         movementTimer.start();
 
@@ -93,9 +99,7 @@ public class Board extends JPanel {
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
                         counter++;
-                        if(checkIfIsWin()) {
-                            paintWinnerMessage(g);
-                        }
+                        checkIfIsWin();
                         continue;
                     }
                     g.setColor(Color.orange);
@@ -115,7 +119,12 @@ public class Board extends JPanel {
         g.setColor(Color.yellow);
         g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
+        if (gameOver) {
+            paintWinnerMessage(g);
+        }
+
     }
+
 
     private List<FoodSprite> fillFoodComponentsList() {
         for (int i = 0; i < booleanArray.length; i++) {
@@ -149,9 +158,7 @@ public class Board extends JPanel {
 
     private void checkIfFoodIsEaten() {
         for (int i = 0; i < foodSpriteList.size(); i++) {
-            if (foodSpriteList.get(i).getCoordinate().getX() / elementSize == pacMan.getCoordinate().getX() / elementSize
-                    && foodSpriteList.get(i).getCoordinate().getY() / elementSize == pacMan.getCoordinate().getY() / elementSize
-                    && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
+            if (foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
                     && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() <= 25
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 10
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 20) {
@@ -160,12 +167,13 @@ public class Board extends JPanel {
         }
     }
 
-    public boolean checkIfIsWin () {
+    public boolean checkIfIsWin() {
         for (int i = 0; i < foodSpriteList.size(); i++) {
             if (!foodSpriteList.get(i).isEaten()) {
                 return false;
             }
         }
+        gameOver = true;
         return true;
     }
 
