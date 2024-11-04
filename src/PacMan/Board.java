@@ -30,9 +30,10 @@ public class Board extends JPanel {
     private List<GhostSprite> ghostSpriteList = new ArrayList<>();
     private int numberOfBoosters = 3;
     private int numberOfGhostSprites = 3;
-    private List<Integer> randomNumbersList;
+    private List<Integer> randomNumbersList = new ArrayList<>();
     private boolean gameOver;
     private int freezePaintingCounter = 0;
+
 
 
     public Board(int height, int width) {
@@ -152,7 +153,7 @@ public class Board extends JPanel {
 
 
     private void createRandomNumbersList() {
-        randomNumbersList = new ArrayList();
+
         Random random = new Random();
         while (randomNumbersList.size() < numberOfBoosters) {
             int randomNumber = random.nextInt(foodSpriteList.size());
@@ -198,6 +199,45 @@ public class Board extends JPanel {
         int x = (width - metrics.stringWidth(winnerMessage)) / 2;
         int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
         g.drawString(winnerMessage, x, y);
+    }
+
+public void determineGhostSpritesInitialTravelDirection () {
+        List<Direction> possibleDirectionsList = new ArrayList<>();
+        for (int i = 0; i < ghostSpriteList.size(); i++) {
+            if (canMoveDown(i)) {
+                possibleDirectionsList.add(Direction.DOWN);
+            }
+            if (canMoveUp(i)) {
+                possibleDirectionsList.add(Direction.UP);
+            }
+            if (canMoveRight(i)) {
+                possibleDirectionsList.add(Direction.RIGHT);
+            }
+            if (canMoveLeft(i)) {
+                possibleDirectionsList.add(Direction.LEFT);
+            }
+        }
+}
+
+
+    private boolean canMoveDown(int counter) {
+        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 45) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 5) / elementSize]
+                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 45) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 44) / elementSize];
+    }
+
+    private boolean canMoveUp(int counter) {
+        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 6) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 5) / elementSize]
+                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 6) / elementSize][((ghostSpriteList.get(counter).getCoordinate().getY()) + 44) / elementSize];
+    }
+
+    private boolean canMoveRight(int counter) {
+        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 5) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 45) / elementSize]
+                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 44) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 45) / elementSize];
+    }
+
+    private boolean canMoveLeft(int counter) {
+        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 5) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 6) / elementSize]
+                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 44) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 6) / elementSize];
     }
 
 
