@@ -7,7 +7,7 @@ import java.io.IOException;
 public class MyFileReader {
     public static boolean[][] createPacManMap() {
 
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Elinor\\IdeaProjects\\PacManGame\\src\\PacManMap.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\lampe\\IdeaProjects\\PacMan\\src\\PacManMap.txt"))) {
 
             boolean[][] pacManMap = new boolean[12][10];
             String line = br.readLine();

@@ -1,6 +1,7 @@
 package PacMan;
 
 import PacMan.sceneObjects.FoodSprite;
+import PacMan.sceneObjects.GhostSprite;
 import PacMan.sceneObjects.PacManSprite;
 
 import javax.swing.*;
@@ -23,10 +24,12 @@ public class Board extends JPanel {
     private final int pacManSize = 40;
     private int smallFoodSize = 4;
     private int boosterSize = 10;
-    private int ghostSize = 30;
+    private int ghostSize = 40;
     private List<FoodSprite> foodSpriteList = new ArrayList<>();
     private PacManSprite pacMan;
+    private List<GhostSprite> ghostSpriteList = new ArrayList<>();
     private int numberOfBoosters = 3;
+    private int numberOfGhostSprites = 3;
     private List<Integer> randomNumbersList;
     private boolean gameOver;
     private int freezePaintingCounter = 0;
@@ -41,7 +44,8 @@ public class Board extends JPanel {
         this.width = width;
         game = new Game();
         pacMan = new PacManSprite(455, 205);
-        fillFoodComponentsList();
+        fillGhostSpriteList();
+        fillFoodSpriteList();
         createRandomNumbersList();
         setBoosterStatusToTrue();
 
@@ -119,14 +123,18 @@ public class Board extends JPanel {
         g.setColor(Color.yellow);
         g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
-        if (gameOver) {
-            paintWinnerMessage(g);
+        g.setColor(Color.green);
+        for (int i = 0; i < ghostSpriteList.size(); i++) {
+            g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
         }
 
+        if (checkIfIsWin()) {
+            paintWinnerMessage(g);
+        }
     }
 
 
-    private List<FoodSprite> fillFoodComponentsList() {
+    private void fillFoodSpriteList() {
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (!booleanArray[i][j]) {
@@ -134,11 +142,16 @@ public class Board extends JPanel {
                 }
             }
         }
-        return foodSpriteList;
+    }
+
+    private void fillGhostSpriteList () {
+        for (int i = 0; i < numberOfGhostSprites; i++) {
+            ghostSpriteList.add(new GhostSprite(155, 205));
+        }
     }
 
 
-    private List<Integer> createRandomNumbersList() {
+    private void createRandomNumbersList() {
         randomNumbersList = new ArrayList();
         Random random = new Random();
         while (randomNumbersList.size() < numberOfBoosters) {
@@ -147,7 +160,6 @@ public class Board extends JPanel {
                 randomNumbersList.add(randomNumber);
             }
         }
-        return randomNumbersList;
     }
 
     private void setBoosterStatusToTrue() {
