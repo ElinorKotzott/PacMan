@@ -30,10 +30,10 @@ public class Board extends JPanel {
     private List<GhostSprite> ghostSpriteList = new ArrayList<>();
     private int numberOfBoosters = 3;
     private int numberOfGhostSprites = 3;
-    private List<Integer> randomNumbersList = new ArrayList<>();
+    private List<Integer> randomNumbersList;
     private boolean gameOver;
     private int freezePaintingCounter = 0;
-
+    private List<Direction> possibleDirectionsList;
 
 
     public Board(int height, int width) {
@@ -145,7 +145,7 @@ public class Board extends JPanel {
         }
     }
 
-    private void fillGhostSpriteList () {
+    private void fillGhostSpriteList() {
         for (int i = 0; i < numberOfGhostSprites; i++) {
             ghostSpriteList.add(new GhostSprite(155, 205));
         }
@@ -153,7 +153,7 @@ public class Board extends JPanel {
 
 
     private void createRandomNumbersList() {
-
+        randomNumbersList = new ArrayList();
         Random random = new Random();
         while (randomNumbersList.size() < numberOfBoosters) {
             int randomNumber = random.nextInt(foodSpriteList.size());
@@ -201,8 +201,8 @@ public class Board extends JPanel {
         g.drawString(winnerMessage, x, y);
     }
 
-public void determineGhostSpritesInitialTravelDirection () {
-        List<Direction> possibleDirectionsList = new ArrayList<>();
+    private void determineGhostSpritesInitialTravelDirection() {
+        possibleDirectionsList = new ArrayList<>();
         for (int i = 0; i < ghostSpriteList.size(); i++) {
             if (canMoveDown(i)) {
                 possibleDirectionsList.add(Direction.DOWN);
@@ -216,8 +216,10 @@ public void determineGhostSpritesInitialTravelDirection () {
             if (canMoveLeft(i)) {
                 possibleDirectionsList.add(Direction.LEFT);
             }
+            Random r = new Random();
+            ghostSpriteList.get(i).getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
         }
-}
+    }
 
 
     private boolean canMoveDown(int counter) {

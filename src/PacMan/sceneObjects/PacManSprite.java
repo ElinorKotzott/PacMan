@@ -1,19 +1,10 @@
 package PacMan.sceneObjects;
 
-public class PacManSprite extends Component {
-    private boolean isDead;
+public class PacManSprite extends MovingSprites {
     private boolean isBoosted;
 
     public PacManSprite (int x, int y) {
         super(x, y);
-    }
-
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public void setDead(boolean dead) {
-        isDead = dead;
     }
 
     public boolean isBoosted() {

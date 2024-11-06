@@ -36,22 +36,22 @@ public class Game {
             }
         }
 
-        if (d.getTravelDir() != null && d.getTravelDir().equals(Direction.LEFT) && canMoveLeft( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.LEFT) && canMoveLeft( booleanArray, pacMan)) {
             moveLeft(pacMan, d);
             return;
         }
 
-        if (d.getTravelDir() != null && d.getTravelDir().equals(Direction.RIGHT) && canMoveRight( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.RIGHT) && canMoveRight( booleanArray, pacMan)) {
             moveRight(pacMan, d);
             return;
         }
 
-        if (d.getTravelDir() != null && d.getTravelDir().equals(Direction.UP) &&canMoveUp( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.UP) &&canMoveUp( booleanArray, pacMan)) {
             moveUp(pacMan, d);
             return;
         }
 
-        if (d.getTravelDir() != null && d.getTravelDir().equals(Direction.DOWN) &&canMoveDown(booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.DOWN) &&canMoveDown(booleanArray, pacMan)) {
             moveDown(pacMan, d);
         }
 
@@ -60,22 +60,22 @@ public class Game {
 
     private void moveDown(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() + 1);
-        d.setTravelDir(Direction.DOWN);
+        d.setDirection(Direction.DOWN);
     }
 
     private void moveUp(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() - 1);
-        d.setTravelDir(Direction.UP);
+        d.setDirection(Direction.UP);
     }
 
     private void moveRight(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() + 1);
-        d.setTravelDir(Direction.RIGHT);
+        d.setDirection(Direction.RIGHT);
     }
 
     private void moveLeft(Component pacMan, TravelDirection d) {
         pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() - 1);
-        d.setTravelDir(Direction.LEFT);
+        d.setDirection(Direction.LEFT);
     }
 
     private boolean canMoveDown(boolean[][] booleanArray, Component pacMan) {

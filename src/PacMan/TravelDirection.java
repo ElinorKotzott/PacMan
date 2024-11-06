@@ -1,16 +1,16 @@
 package PacMan;
 
 public class TravelDirection {
-    private Direction travelDir;
+    private Direction direction;
 
     public TravelDirection() {
     }
 
-    public Direction getTravelDir() {
-        return travelDir;
+    public Direction getDirection() {
+        return direction;
     }
 
-    public void setTravelDir(Direction travelDir) {
-        this.travelDir = travelDir;
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }
