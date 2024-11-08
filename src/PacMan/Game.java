@@ -111,16 +111,16 @@ public class Game {
     public Direction determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
         List<Direction> possibleDirectionsList = new ArrayList<>();
 
-        if (canSpriteMoveDown(booleanArray, ghostSprite)) {
+        if (canSpriteMoveDown(booleanArray, ghostSprite) && ghostSprite.getTravelDirection().getDirection() != Direction.UP) {
             possibleDirectionsList.add(Direction.DOWN);
         }
-        if (canSpriteMoveUp(booleanArray, ghostSprite)) {
+        if (canSpriteMoveUp(booleanArray, ghostSprite) && ghostSprite.getTravelDirection().getDirection() != Direction.DOWN) {
             possibleDirectionsList.add(Direction.UP);
         }
-        if (canSpriteMoveRight(booleanArray, ghostSprite)) {
+        if (canSpriteMoveRight(booleanArray, ghostSprite) && ghostSprite.getTravelDirection().getDirection() != Direction.LEFT) {
             possibleDirectionsList.add(Direction.RIGHT);
         }
-        if (canSpriteMoveLeft(booleanArray, ghostSprite)) {
+        if (canSpriteMoveLeft(booleanArray, ghostSprite) && ghostSprite.getTravelDirection().getDirection() != Direction.RIGHT) {
             possibleDirectionsList.add(Direction.LEFT);
         }
 
@@ -147,11 +147,10 @@ public class Game {
 }
 
 
-// without setting a default travel direction for the ghosts: in the beginning, none of the ghosts have a travel direction -
-// therefore, all directions are open for them to travel to
-// later, the current travel direction will be checked - the opposite travel direction should not be possible then
 // wenn die aktuelle travel direction nicht null ist, dann: wenn sie up ist, dann ist down nicht erlaubt und andersherum
 // wenn sie right ist, dann ist left nicht erlaubt und andersherum
+// Ausnahme: wenn pacMan in einer Sackgasse ist, kann er nur zurück - das passiert, wenn die possible directions list nur einen Eintrag hat
+// condition
 //
 
 
