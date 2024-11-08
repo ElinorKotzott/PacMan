@@ -76,9 +76,9 @@ public class Board extends JPanel {
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
                 game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
-
-             // TODO for-loop for moving the ghosts here
-
+                for(int i = 0; i < ghostSpriteList.size(); i++) {
+                    game.moveGhostSprite(booleanArray, ghostSpriteList.get(i));
+                }
                 repaint();
             } else {
                 freezePaintingCounter++;
@@ -151,6 +151,7 @@ public class Board extends JPanel {
     private void fillGhostSpriteList() {
         for (int i = 0; i < numberOfGhostSprites; i++) {
             ghostSpriteList.add(new GhostSprite(155, 205));
+            ghostSpriteList.get(i).setTravelDirection(new TravelDirection());
         }
     }
 

@@ -1,6 +1,5 @@
 package PacMan;
 
-import PacMan.sceneObjects.Component;
 import PacMan.sceneObjects.MovingSprite;
 
 import java.awt.event.KeyEvent;
@@ -12,6 +11,7 @@ import static PacMan.Board.elementSize;
 
 public class Game {
     private final Random r;
+
     public Game(Random r) {
         this.r = r;
     }
@@ -67,23 +67,23 @@ public class Game {
 
     }
 
-    private void moveDown(Component pacMan, TravelDirection d) {
-        pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() + 1);
+    private void moveDown(MovingSprite sprite, TravelDirection d) {
+        sprite.getCoordinate().setX(sprite.getCoordinate().getX() + 1);
         d.setDirection(Direction.DOWN);
     }
 
-    private void moveUp(Component pacMan, TravelDirection d) {
-        pacMan.getCoordinate().setX(pacMan.getCoordinate().getX() - 1);
+    private void moveUp(MovingSprite sprite, TravelDirection d) {
+        sprite.getCoordinate().setX(sprite.getCoordinate().getX() - 1);
         d.setDirection(Direction.UP);
     }
 
-    private void moveRight(Component pacMan, TravelDirection d) {
-        pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() + 1);
+    private void moveRight(MovingSprite sprite, TravelDirection d) {
+        sprite.getCoordinate().setY(sprite.getCoordinate().getY() + 1);
         d.setDirection(Direction.RIGHT);
     }
 
-    private void moveLeft(Component pacMan, TravelDirection d) {
-        pacMan.getCoordinate().setY(pacMan.getCoordinate().getY() - 1);
+    private void moveLeft(MovingSprite sprite, TravelDirection d) {
+        sprite.getCoordinate().setY(sprite.getCoordinate().getY() - 1);
         d.setDirection(Direction.LEFT);
     }
 
@@ -108,25 +108,50 @@ public class Game {
     }
 
 
-    private void determineGhostSpritesInitialTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
+    public Direction determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
         List<Direction> possibleDirectionsList = new ArrayList<>();
 
-            if (canSpriteMoveDown(booleanArray, ghostSprite)) {
-                possibleDirectionsList.add(Direction.DOWN);
-            }
-            if (canSpriteMoveUp(booleanArray, ghostSprite)) {
-                possibleDirectionsList.add(Direction.UP);
-            }
-            if (canSpriteMoveRight(booleanArray, ghostSprite)) {
-                possibleDirectionsList.add(Direction.RIGHT);
-            }
-            if (canSpriteMoveLeft(booleanArray, ghostSprite)) {
-                possibleDirectionsList.add(Direction.LEFT);
-            }
-
-            ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
+        if (canSpriteMoveDown(booleanArray, ghostSprite)) {
+            possibleDirectionsList.add(Direction.DOWN);
+        }
+        if (canSpriteMoveUp(booleanArray, ghostSprite)) {
+            possibleDirectionsList.add(Direction.UP);
+        }
+        if (canSpriteMoveRight(booleanArray, ghostSprite)) {
+            possibleDirectionsList.add(Direction.RIGHT);
+        }
+        if (canSpriteMoveLeft(booleanArray, ghostSprite)) {
+            possibleDirectionsList.add(Direction.LEFT);
         }
 
+        ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
+        return ghostSprite.getTravelDirection().getDirection();
+    }
+
+    public void moveGhostSprite(boolean[][] booleanArray, MovingSprite ghostSprite) {
+        determineGhostSpritesTravelDirection(booleanArray, ghostSprite);
+        if (ghostSprite.getTravelDirection().getDirection() == Direction.UP) {
+            moveUp(ghostSprite, ghostSprite.getTravelDirection());
+        }
+        if (ghostSprite.getTravelDirection().getDirection() == Direction.DOWN) {
+            moveDown(ghostSprite, ghostSprite.getTravelDirection());
+        }
+        if (ghostSprite.getTravelDirection().getDirection() == Direction.LEFT) {
+            moveLeft(ghostSprite, ghostSprite.getTravelDirection());
+        }
+        if (ghostSprite.getTravelDirection().getDirection() == Direction.RIGHT) {
+            moveRight(ghostSprite, ghostSprite.getTravelDirection());
+        }
+    }
+
 }
+
+
+// without setting a default travel direction for the ghosts: in the beginning, none of the ghosts have a travel direction -
+// therefore, all directions are open for them to travel to
+// later, the current travel direction will be checked - the opposite travel direction should not be possible then
+// wenn die aktuelle travel direction nicht null ist, dann: wenn sie up ist, dann ist down nicht erlaubt und andersherum
+// wenn sie right ist, dann ist left nicht erlaubt und andersherum
+//
 
 
