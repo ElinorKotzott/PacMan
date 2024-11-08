@@ -26,14 +26,14 @@ public class Board extends JPanel {
     private int boosterSize = 10;
     private int ghostSize = 40;
     private List<FoodSprite> foodSpriteList = new ArrayList<>();
-    private PacManSprite pacMan;
+    private final PacManSprite pacMan;
     private List<GhostSprite> ghostSpriteList = new ArrayList<>();
-    private int numberOfBoosters = 3;
-    private int numberOfGhostSprites = 3;
+    private final int numberOfBoosters = 3;
+    private final int numberOfGhostSprites = 3;
     private List<Integer> randomNumbersList;
     private boolean gameOver;
     private int freezePaintingCounter = 0;
-    private List<Direction> possibleDirectionsList;
+    private final Random r = new Random();
 
 
     public Board(int height, int width) {
@@ -43,7 +43,7 @@ public class Board extends JPanel {
         setPreferredSize(new Dimension(width, height));
         this.height = height;
         this.width = width;
-        game = new Game();
+        game = new Game(r);
         pacMan = new PacManSprite(455, 205);
         fillGhostSpriteList();
         fillFoodSpriteList();
@@ -76,6 +76,9 @@ public class Board extends JPanel {
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
                 game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
+
+             // TODO for-loop for moving the ghosts here
+
                 repaint();
             } else {
                 freezePaintingCounter++;
@@ -154,9 +157,8 @@ public class Board extends JPanel {
 
     private void createRandomNumbersList() {
         randomNumbersList = new ArrayList();
-        Random random = new Random();
         while (randomNumbersList.size() < numberOfBoosters) {
-            int randomNumber = random.nextInt(foodSpriteList.size());
+            int randomNumber = r.nextInt(foodSpriteList.size());
             if (!randomNumbersList.contains(randomNumber)) {
                 randomNumbersList.add(randomNumber);
             }
@@ -200,47 +202,5 @@ public class Board extends JPanel {
         int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
         g.drawString(winnerMessage, x, y);
     }
-
-    private void determineGhostSpritesInitialTravelDirection() {
-        possibleDirectionsList = new ArrayList<>();
-        for (int i = 0; i < ghostSpriteList.size(); i++) {
-            if (canMoveDown(i)) {
-                possibleDirectionsList.add(Direction.DOWN);
-            }
-            if (canMoveUp(i)) {
-                possibleDirectionsList.add(Direction.UP);
-            }
-            if (canMoveRight(i)) {
-                possibleDirectionsList.add(Direction.RIGHT);
-            }
-            if (canMoveLeft(i)) {
-                possibleDirectionsList.add(Direction.LEFT);
-            }
-            Random r = new Random();
-            ghostSpriteList.get(i).getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
-        }
-    }
-
-
-    private boolean canMoveDown(int counter) {
-        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 45) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 45) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 44) / elementSize];
-    }
-
-    private boolean canMoveUp(int counter) {
-        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 6) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 6) / elementSize][((ghostSpriteList.get(counter).getCoordinate().getY()) + 44) / elementSize];
-    }
-
-    private boolean canMoveRight(int counter) {
-        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 5) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 45) / elementSize]
-                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 44) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() + 45) / elementSize];
-    }
-
-    private boolean canMoveLeft(int counter) {
-        return !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() - 5) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 6) / elementSize]
-                && !booleanArray[(ghostSpriteList.get(counter).getCoordinate().getX() + 44) / elementSize][(ghostSpriteList.get(counter).getCoordinate().getY() - 6) / elementSize];
-    }
-
 
 }

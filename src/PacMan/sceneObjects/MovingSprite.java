@@ -2,20 +2,20 @@ package PacMan.sceneObjects;
 
 import PacMan.TravelDirection;
 
-public class MovingSprites extends Component{
-    private boolean isDead;
+public class MovingSprite extends Component{
+    private boolean dead;
     private TravelDirection travelDirection;
 
-    public MovingSprites(int x, int y) {
+    public MovingSprite(int x, int y) {
         super(x, y);
     }
 
     public boolean isDead() {
-        return isDead;
+        return dead;
     }
 
     public void setDead(boolean dead) {
-        isDead = dead;
+        this.dead = dead;
     }
 
     public TravelDirection getTravelDirection() {

@@ -1,57 +1,66 @@
 package PacMan;
 
 import PacMan.sceneObjects.Component;
+import PacMan.sceneObjects.MovingSprite;
+
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static PacMan.Board.elementSize;
 
 public class Game {
+    private final Random r;
+    public Game(Random r) {
+        this.r = r;
+    }
 
-    public void movePacMan(int moveDirection, boolean[][] booleanArray, Component pacMan, TravelDirection d) {
+    public void movePacMan(int moveDirection, boolean[][] booleanArray, MovingSprite pacMan, TravelDirection d) {
 
-        switch(moveDirection){
+        switch (moveDirection) {
             case KeyEvent.VK_LEFT -> {
-                if (canMoveLeft(booleanArray, pacMan)) {
+                if (canSpriteMoveLeft(booleanArray, pacMan)) {
                     moveLeft(pacMan, d);
                     return;
                 }
             }
             case KeyEvent.VK_RIGHT -> {
-                if (canMoveRight(booleanArray, pacMan)) {
+                if (canSpriteMoveRight(booleanArray, pacMan)) {
                     moveRight(pacMan, d);
                     return;
                 }
             }
             case KeyEvent.VK_UP -> {
-                if (canMoveUp(booleanArray, pacMan)) {
+                if (canSpriteMoveUp(booleanArray, pacMan)) {
                     moveUp(pacMan, d);
                     return;
                 }
             }
             case KeyEvent.VK_DOWN -> {
-                if (canMoveDown(booleanArray, pacMan)) {
+                if (canSpriteMoveDown(booleanArray, pacMan)) {
                     moveDown(pacMan, d);
                     return;
                 }
             }
         }
 
-        if (d.getDirection() != null && d.getDirection().equals(Direction.LEFT) && canMoveLeft( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.LEFT) && canSpriteMoveLeft(booleanArray, pacMan)) {
             moveLeft(pacMan, d);
             return;
         }
 
-        if (d.getDirection() != null && d.getDirection().equals(Direction.RIGHT) && canMoveRight( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.RIGHT) && canSpriteMoveRight(booleanArray, pacMan)) {
             moveRight(pacMan, d);
             return;
         }
 
-        if (d.getDirection() != null && d.getDirection().equals(Direction.UP) &&canMoveUp( booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.UP) && canSpriteMoveUp(booleanArray, pacMan)) {
             moveUp(pacMan, d);
             return;
         }
 
-        if (d.getDirection() != null && d.getDirection().equals(Direction.DOWN) &&canMoveDown(booleanArray, pacMan)) {
+        if (d.getDirection() != null && d.getDirection().equals(Direction.DOWN) && canSpriteMoveDown(booleanArray, pacMan)) {
             moveDown(pacMan, d);
         }
 
@@ -78,23 +87,46 @@ public class Game {
         d.setDirection(Direction.LEFT);
     }
 
-    private boolean canMoveDown(boolean[][] booleanArray, Component pacMan) {
-        return !booleanArray[(pacMan.getCoordinate().getX() + 45) / elementSize][(pacMan.getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(pacMan.getCoordinate().getX() + 45) / elementSize][(pacMan.getCoordinate().getY() + 44) / elementSize];
+    private boolean canSpriteMoveDown(boolean[][] booleanArray, MovingSprite sprite) {
+        return !booleanArray[(sprite.getCoordinate().getX() + 45) / elementSize][(sprite.getCoordinate().getY() - 5) / elementSize]
+                && !booleanArray[(sprite.getCoordinate().getX() + 45) / elementSize][(sprite.getCoordinate().getY() + 44) / elementSize];
     }
 
-    private boolean canMoveUp(boolean[][] booleanArray, Component pacMan) {
-        return !booleanArray[(pacMan.getCoordinate().getX() - 6) / elementSize][(pacMan.getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(pacMan.getCoordinate().getX() - 6) / elementSize][((pacMan.getCoordinate().getY()) + 44) / elementSize];
+    private boolean canSpriteMoveUp(boolean[][] booleanArray, MovingSprite sprite) {
+        return !booleanArray[(sprite.getCoordinate().getX() - 6) / elementSize][(sprite.getCoordinate().getY() - 5) / elementSize]
+                && !booleanArray[(sprite.getCoordinate().getX() - 6) / elementSize][((sprite.getCoordinate().getY()) + 44) / elementSize];
     }
 
-    private boolean canMoveRight(boolean[][] booleanArray, Component pacMan) {
-        return !booleanArray[(pacMan.getCoordinate().getX() - 5) / elementSize][(pacMan.getCoordinate().getY() + 45) / elementSize]
-                && !booleanArray[(pacMan.getCoordinate().getX() + 44) / elementSize][(pacMan.getCoordinate().getY() + 45) / elementSize];
+    private boolean canSpriteMoveRight(boolean[][] booleanArray, MovingSprite sprite) {
+        return !booleanArray[(sprite.getCoordinate().getX() - 5) / elementSize][(sprite.getCoordinate().getY() + 45) / elementSize]
+                && !booleanArray[(sprite.getCoordinate().getX() + 44) / elementSize][(sprite.getCoordinate().getY() + 45) / elementSize];
     }
 
-    private boolean canMoveLeft(boolean[][] booleanArray, Component pacMan) {
-        return !booleanArray[(pacMan.getCoordinate().getX() - 5) / elementSize][(pacMan.getCoordinate().getY() - 6) / elementSize]
-                && !booleanArray[(pacMan.getCoordinate().getX() + 44) / elementSize][(pacMan.getCoordinate().getY() - 6) / elementSize];
+    private boolean canSpriteMoveLeft(boolean[][] booleanArray, MovingSprite sprite) {
+        return !booleanArray[(sprite.getCoordinate().getX() - 5) / elementSize][(sprite.getCoordinate().getY() - 6) / elementSize]
+                && !booleanArray[(sprite.getCoordinate().getX() + 44) / elementSize][(sprite.getCoordinate().getY() - 6) / elementSize];
     }
+
+
+    private void determineGhostSpritesInitialTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
+        List<Direction> possibleDirectionsList = new ArrayList<>();
+
+            if (canSpriteMoveDown(booleanArray, ghostSprite)) {
+                possibleDirectionsList.add(Direction.DOWN);
+            }
+            if (canSpriteMoveUp(booleanArray, ghostSprite)) {
+                possibleDirectionsList.add(Direction.UP);
+            }
+            if (canSpriteMoveRight(booleanArray, ghostSprite)) {
+                possibleDirectionsList.add(Direction.RIGHT);
+            }
+            if (canSpriteMoveLeft(booleanArray, ghostSprite)) {
+                possibleDirectionsList.add(Direction.LEFT);
+            }
+
+            ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
+        }
+
 }
+
+
