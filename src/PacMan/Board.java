@@ -34,6 +34,7 @@ public class Board extends JPanel {
     private boolean gameOver;
     private int freezePaintingCounter = 0;
     private final Random r = new Random();
+    private int playerLives = 3;
 
 
     public Board(int height, int width) {
@@ -76,7 +77,7 @@ public class Board extends JPanel {
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
                 game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
-                for(int i = 0; i < ghostSpriteList.size(); i++) {
+                for (int i = 0; i < ghostSpriteList.size(); i++) {
                     game.moveGhostSprite(booleanArray, ghostSpriteList.get(i));
                 }
                 repaint();
@@ -104,6 +105,9 @@ public class Board extends JPanel {
                     g.setColor(Color.blue);
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
+                    if (checkIfPacManIsEatenByGhosts()) {
+                        resetGame();
+                    }
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
                         counter++;
@@ -176,12 +180,39 @@ public class Board extends JPanel {
         for (int i = 0; i < foodSpriteList.size(); i++) {
             if (foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() >= 15
                     && foodSpriteList.get(i).getCoordinate().getY() - pacMan.getCoordinate().getY() <= 25
-                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 10
-                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 20) {
+                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 5
+                    && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 25) {
                 foodSpriteList.get(i).setEaten(true);
             }
         }
     }
+
+    private boolean checkIfPacManIsEatenByGhosts() {
+        for (int i = 0; i < numberOfGhostSprites; i++) {
+            if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
+                if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX() - 39 || pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX() + 39) {
+                    pacMan.setDead(true);
+                    playerLives--;
+                    if (playerLives == 0) {
+                        gameOver = true;
+                    }
+                    return true;
+                }
+            }
+            if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX()) {
+                if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY() - 39 || pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY() + 39) {
+                    pacMan.setDead(true);
+                    playerLives--;
+                    if (playerLives == 0) {
+                        gameOver = true;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     public boolean checkIfIsWin() {
         for (int i = 0; i < foodSpriteList.size(); i++) {
@@ -202,6 +233,17 @@ public class Board extends JPanel {
         int x = (width - metrics.stringWidth(winnerMessage)) / 2;
         int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
         g.drawString(winnerMessage, x, y);
+    }
+
+    public void resetGame() {
+        pacMan.getCoordinate().setX(455);
+        pacMan.getCoordinate().setY(205);
+
+        for (int i = 0; i < ghostSpriteList.size(); i++) {
+            ghostSpriteList.get(i).getCoordinate().setX(155);
+            ghostSpriteList.get(i).getCoordinate().setY(205);
+        }
+
     }
 
 }

@@ -137,7 +137,6 @@ public class Game {
             if (ghostSprite.getTravelDirection().getDirection() == Direction.LEFT) {
                 possibleDirectionsList.add(Direction.RIGHT);
             }
-
         }
 
         ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
@@ -160,7 +159,6 @@ public class Game {
             moveRight(ghostSprite, ghostSprite.getTravelDirection());
         }
     }
-
 }
 
 
