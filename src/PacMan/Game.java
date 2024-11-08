@@ -124,8 +124,25 @@ public class Game {
             possibleDirectionsList.add(Direction.LEFT);
         }
 
+        if (possibleDirectionsList.isEmpty()) {
+            if (ghostSprite.getTravelDirection().getDirection() == Direction.UP) {
+                possibleDirectionsList.add(Direction.DOWN);
+            }
+            if (ghostSprite.getTravelDirection().getDirection() == Direction.DOWN) {
+                possibleDirectionsList.add(Direction.UP);
+            }
+            if (ghostSprite.getTravelDirection().getDirection() == Direction.RIGHT) {
+                possibleDirectionsList.add(Direction.LEFT);
+            }
+            if (ghostSprite.getTravelDirection().getDirection() == Direction.LEFT) {
+                possibleDirectionsList.add(Direction.RIGHT);
+            }
+
+        }
+
         ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
         return ghostSprite.getTravelDirection().getDirection();
+
     }
 
     public void moveGhostSprite(boolean[][] booleanArray, MovingSprite ghostSprite) {
