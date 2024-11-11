@@ -36,6 +36,7 @@ public class Board extends JPanel {
     private int freezePaintingCounter = 0;
     private final Random r = new Random();
     private int playerLives = 3;
+    private int boostedPacManCounter = 0;
 
 
     public Board(int height, int width) {
@@ -74,6 +75,8 @@ public class Board extends JPanel {
             }
         });
 
+
+
         int delay = 1;
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
@@ -87,6 +90,13 @@ public class Board extends JPanel {
                 if (freezePaintingCounter == 150.000) {
                     System.exit(0);
                 }
+            }
+            if (pacMan.isBoosted()) {
+                boostedPacManCounter++;
+                        if (boostedPacManCounter == 300.000) {
+                            pacMan.setBoosted(false);
+                            boostedPacManCounter = 0;
+                        }
             }
         });
         movementTimer.start();
@@ -128,8 +138,11 @@ public class Board extends JPanel {
             }
         }
 
-
         g.setColor(Color.yellow);
+        if (pacMan.isBoosted()) {
+            g.setColor(Color.white);
+        }
+
         g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
         g.setColor(Color.green);
@@ -193,6 +206,9 @@ public class Board extends JPanel {
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 5
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 25) {
                 foodSpriteList.get(i).setEaten(true);
+                if (foodSpriteList.get(i).isBooster()) {
+                    pacMan.setBoosted(true);
+                }
             }
         }
     }
