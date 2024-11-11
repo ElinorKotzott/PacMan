@@ -25,6 +25,7 @@ public class Board extends JPanel {
     private int smallFoodSize = 4;
     private int boosterSize = 10;
     private int ghostSize = 40;
+    private int playerLifeSize = 18;
     private List<FoodSprite> foodSpriteList = new ArrayList<>();
     private final PacManSprite pacMan;
     private List<GhostSprite> ghostSpriteList = new ArrayList<>();
@@ -139,6 +140,13 @@ public class Board extends JPanel {
         if (checkIfIsWin()) {
             paintWinnerMessage(g);
         }
+
+        if (!gameOver) {
+            g.setColor(Color.red);
+            for (int i = 0; i < playerLives; i++) {
+                g.fillOval(422 + i * 22, 566, playerLifeSize, playerLifeSize);
+            }
+        }
     }
 
 
@@ -222,8 +230,8 @@ public class Board extends JPanel {
                     }
                     if (pacMan.getCoordinate().getX() >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
                             pacMan.getCoordinate().getX() <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY()+30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY()+30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
+                            pacMan.getCoordinate().getY() + 30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
+                            pacMan.getCoordinate().getY() + 30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
                         pacMan.setDead(true);
                         playerLives--;
                         if (playerLives == 0) {
@@ -231,8 +239,8 @@ public class Board extends JPanel {
                         }
                         return true;
                     }
-                    if (pacMan.getCoordinate().getX()+30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX()+30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
+                    if (pacMan.getCoordinate().getX() + 30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
+                            pacMan.getCoordinate().getX() + 30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
                             pacMan.getCoordinate().getY() >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
                             pacMan.getCoordinate().getY() <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
                         pacMan.setDead(true);
@@ -242,10 +250,10 @@ public class Board extends JPanel {
                         }
                         return true;
                     }
-                    if (pacMan.getCoordinate().getX()+30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX()+30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY()+30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY()+30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
+                    if (pacMan.getCoordinate().getX() + 30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
+                            pacMan.getCoordinate().getX() + 30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
+                            pacMan.getCoordinate().getY() + 30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
+                            pacMan.getCoordinate().getY() + 30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
                         pacMan.setDead(true);
                         playerLives--;
                         if (playerLives == 0) {
