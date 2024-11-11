@@ -143,9 +143,11 @@ public class Board extends JPanel {
 
         if (!gameOver) {
             g.setColor(Color.red);
-            for (int i = 0; i < playerLives; i++) {
-                g.fillOval(422 + i * 22, 566, playerLifeSize, playerLifeSize);
-            }
+            paintPlayerLives(g);
+        }
+
+        if (playerLives == 0) {
+            paintLoserMessage(g);
         }
     }
 
@@ -287,6 +289,23 @@ public class Board extends JPanel {
         int x = (width - metrics.stringWidth(winnerMessage)) / 2;
         int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
         g.drawString(winnerMessage, x, y);
+    }
+
+    public void paintLoserMessage(Graphics g) {
+        g.setColor(Color.white);
+        String loserMessage = "Game over!";
+        Font font = new Font("Arial", Font.BOLD, 30);
+        g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics(font);
+        int x = (width - metrics.stringWidth(loserMessage)) / 2;
+        int y = (height - metrics.getHeight()) / 2 + metrics.getAscent();
+        g.drawString(loserMessage, x, y);
+    }
+
+    private void paintPlayerLives(Graphics g) {
+        for (int i = 0; i < playerLives; i++) {
+            g.fillOval(422 + i * 22, 566, playerLifeSize, playerLifeSize);
+        }
     }
 
     public void resetGame() {
