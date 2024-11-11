@@ -189,8 +189,8 @@ public class Board extends JPanel {
 
     private boolean checkIfPacManIsEatenByGhosts() {
         for (int i = 0; i < numberOfGhostSprites; i++) {
-            if (pacMan.getCoordinate().getY() <= ghostSpriteList.get(i).getCoordinate().getY() + 3 && pacMan.getCoordinate().getY() >= ghostSpriteList.get(i).getCoordinate().getY() - 5) {
-                if (pacMan.getCoordinate().getX() - 39 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() + 39 == ghostSpriteList.get(i).getCoordinate().getX()) {
+            if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
+                if (pacMan.getCoordinate().getX() - 38 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() + 38 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() - 39 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() + 39 == ghostSpriteList.get(i).getCoordinate().getX()) {
                     pacMan.setDead(true);
                     playerLives--;
                     if (playerLives == 0) {
@@ -199,8 +199,8 @@ public class Board extends JPanel {
                     return true;
                 }
             }
-            if (pacMan.getCoordinate().getX() <= ghostSpriteList.get(i).getCoordinate().getX() + 3 && pacMan.getCoordinate().getX() >= ghostSpriteList.get(i).getCoordinate().getX() - 5) {
-                if (pacMan.getCoordinate().getY() - 39 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() + 39 == ghostSpriteList.get(i).getCoordinate().getY()) {
+            if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX()) {
+                if (pacMan.getCoordinate().getY() - 38 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() + 38 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() - 39 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() + 39 == ghostSpriteList.get(i).getCoordinate().getY()) {
                     pacMan.setDead(true);
                     playerLives--;
                     if (playerLives == 0) {
