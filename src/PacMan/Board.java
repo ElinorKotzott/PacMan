@@ -206,7 +206,9 @@ public class Board extends JPanel {
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 5
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 25) {
                 foodSpriteList.get(i).setEaten(true);
+
                 if (foodSpriteList.get(i).isBooster()) {
+                    foodSpriteList.get(i).setBooster(false);
                     pacMan.setBoosted(true);
                 }
             }
