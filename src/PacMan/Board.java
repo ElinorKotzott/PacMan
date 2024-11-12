@@ -76,7 +76,6 @@ public class Board extends JPanel {
         });
 
 
-
         int delay = 1;
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
@@ -93,10 +92,10 @@ public class Board extends JPanel {
             }
             if (pacMan.isBoosted()) {
                 boostedPacManCounter++;
-                        if (boostedPacManCounter == 300.000) {
-                            pacMan.setBoosted(false);
-                            boostedPacManCounter = 0;
-                        }
+                if (boostedPacManCounter == 300.000) {
+                    pacMan.setBoosted(false);
+                    boostedPacManCounter = 0;
+                }
             }
         });
         movementTimer.start();
@@ -218,71 +217,49 @@ public class Board extends JPanel {
     private boolean checkIfPacManIsEatenByGhosts() {
         for (int i = 0; i < numberOfGhostSprites; i++) {
             if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
-                if (pacMan.getCoordinate().getX() - 38 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() + 38 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() - 39 == ghostSpriteList.get(i).getCoordinate().getX() || pacMan.getCoordinate().getX() + 39 == ghostSpriteList.get(i).getCoordinate().getX()) {
-                    pacMan.setDead(true);
-                    playerLives--;
-                    if (playerLives == 0) {
-                        gameOver = true;
-                    }
+                if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getX(), ghostSpriteList.get(i).getCoordinate().getX())) {
                     return true;
                 }
             } else if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX()) {
-                if (pacMan.getCoordinate().getY() - 38 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() + 38 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() - 39 == ghostSpriteList.get(i).getCoordinate().getY() || pacMan.getCoordinate().getY() + 39 == ghostSpriteList.get(i).getCoordinate().getY()) {
-                    pacMan.setDead(true);
-                    playerLives--;
-                    if (playerLives == 0) {
-                        gameOver = true;
-                    }
+                if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getY())) {
                     return true;
                 }
             } else {
                 for (int j = 0; j < ghostSpriteList.size(); j++) {
-                    if (pacMan.getCoordinate().getX() >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX() <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY() >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY() <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
-                        pacMan.setDead(true);
-                        playerLives--;
-                        if (playerLives == 0) {
-                            gameOver = true;
-                        }
-                        return true;
-                    }
-                    if (pacMan.getCoordinate().getX() >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX() <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY() + 30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY() + 30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
-                        pacMan.setDead(true);
-                        playerLives--;
-                        if (playerLives == 0) {
-                            gameOver = true;
-                        }
-                        return true;
-                    }
-                    if (pacMan.getCoordinate().getX() + 30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX() + 30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY() >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY() <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
-                        pacMan.setDead(true);
-                        playerLives--;
-                        if (playerLives == 0) {
-                            gameOver = true;
-                        }
-                        return true;
-                    }
-                    if (pacMan.getCoordinate().getX() + 30 >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
-                            pacMan.getCoordinate().getX() + 30 <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
-                            pacMan.getCoordinate().getY() + 30 >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
-                            pacMan.getCoordinate().getY() + 30 <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
-                        pacMan.setDead(true);
-                        playerLives--;
-                        if (playerLives == 0) {
-                            gameOver = true;
-                        }
+                    if (doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY()) ||
+                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY() + 30) ||
+                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY()) ||
+                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY() + 30)) {
                         return true;
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    private boolean doPacManAndGhostTouchWhileSharingSameXOrY (int pacXOrY, int ghostXOrY) {
+        if (pacXOrY - 38 == ghostXOrY || pacXOrY + 38 == ghostXOrY
+                || pacXOrY - 39 == ghostXOrY || pacXOrY + 39 == ghostXOrY) {
+            playerLives--;
+            if (playerLives == 0) {
+                gameOver = true;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean doPacManAndGhostsTouchWhileNotSharingSameXOrY(int j, int pacX, int pacY) {
+        if (pacX >= ghostSpriteList.get(j).getCoordinate().getX() + 5 &&
+                pacX <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
+                pacY >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
+                pacY <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
+            playerLives--;
+            if (playerLives == 0) {
+                gameOver = true;
+            }
+            return true;
         }
         return false;
     }
