@@ -63,8 +63,6 @@ public class Game {
         if (d.getDirection() != null && d.getDirection().equals(Direction.DOWN) && canSpriteMoveDown(booleanArray, pacMan)) {
             moveDown(pacMan, d);
         }
-
-
     }
 
     private void moveDown(MovingSprite sprite, TravelDirection d) {
@@ -107,7 +105,6 @@ public class Game {
                 && !booleanArray[(sprite.getCoordinate().getX() + 44) / elementSize][(sprite.getCoordinate().getY() - 6) / elementSize];
     }
 
-
     public void determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
         List<Direction> possibleDirectionsList = new ArrayList<>();
 
@@ -133,7 +130,6 @@ public class Game {
         ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
     }
 
-
     private void addDirectionToDirectionsListIfListIsEmpty(MovingSprite ghostSprite, List<Direction> possibleDirectionsList, Direction d1, Direction d2) {
         if (ghostSprite.getTravelDirection().getDirection() == d1) {
             possibleDirectionsList.add(d2);
@@ -156,12 +152,4 @@ public class Game {
         }
     }
 }
-
-
-// wenn die aktuelle travel direction nicht null ist, dann: wenn sie up ist, dann ist down nicht erlaubt und andersherum
-// wenn sie right ist, dann ist left nicht erlaubt und andersherum
-// Ausnahme: wenn pacMan in einer Sackgasse ist, kann er nur zurück - das passiert, wenn die possible directions list nur einen Eintrag hat
-// condition
-//
-
 

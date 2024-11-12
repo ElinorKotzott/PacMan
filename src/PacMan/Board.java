@@ -112,7 +112,12 @@ public class Board extends JPanel {
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
                     if (CheckIfPacManAndGhostsAreTouching()) {
+                        if (!pacMan.isBoosted()) {
                         resetGame();
+                        }
+                        else {
+// TODO continue here
+                        }
                     }
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
@@ -142,7 +147,13 @@ public class Board extends JPanel {
 
         g.setColor(Color.green);
         for (int i = 0; i < ghostSpriteList.size(); i++) {
-            g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
+            if (!ghostSpriteList.get(i).isDead()) {
+                g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
+            }
+            else {
+                resetDeadGhostSprite(i);
+                g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
+            }
         }
 
         if (checkIfIsWin()) {
@@ -157,6 +168,12 @@ public class Board extends JPanel {
         if (playerLives == 0) {
             paintLoserMessage(g);
         }
+    }
+
+    private void resetDeadGhostSprite (int i) {
+        ghostSpriteList.get(i).getCoordinate().setX(155);
+        ghostSpriteList.get(i).getCoordinate().setY(205);
+        ghostSpriteList.get(i).setDead(false);
     }
 
     private void fillFoodSpriteList() {
@@ -177,7 +194,7 @@ public class Board extends JPanel {
     }
 
     private void createRandomNumbersList() {
-        randomNumbersList = new ArrayList();
+        randomNumbersList = new ArrayList<>();
         while (randomNumbersList.size() < numberOfBoosters) {
             int randomNumber = r.nextInt(foodSpriteList.size());
             if (!randomNumbersList.contains(randomNumber)) {
@@ -202,6 +219,7 @@ public class Board extends JPanel {
                 if (foodSpriteList.get(i).isBooster()) {
                     foodSpriteList.get(i).setBooster(false);
                     pacMan.setBoosted(true);
+                    boostedPacManCounter = 0;
                 }
             }
         }
@@ -211,10 +229,12 @@ public class Board extends JPanel {
         for (int i = 0; i < numberOfGhostSprites; i++) {
             if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
                 if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getX(), ghostSpriteList.get(i).getCoordinate().getX())) {
+                    setGhostSpriteToDeadIfPacManIsBoosted(i);
                     return true;
                 }
             } else if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX()) {
                 if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getY())) {
+                    setGhostSpriteToDeadIfPacManIsBoosted(i);
                     return true;
                 }
             } else {
@@ -223,6 +243,7 @@ public class Board extends JPanel {
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY() + 30) ||
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY()) ||
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY() + 30)) {
+                        setGhostSpriteToDeadIfPacManIsBoosted(i);
                         return true;
                     }
                 }
@@ -230,6 +251,13 @@ public class Board extends JPanel {
         }
         return false;
     }
+
+    private void setGhostSpriteToDeadIfPacManIsBoosted (int i) {
+        if (pacMan.isBoosted()) {
+            ghostSpriteList.get(i).setDead(true);
+        }
+    }
+
 
     private boolean doPacManAndGhostTouchWhileSharingSameXOrY(int pacXOrY, int ghostXOrY) {
         if (pacXOrY - 38 == ghostXOrY || pacXOrY + 38 == ghostXOrY
