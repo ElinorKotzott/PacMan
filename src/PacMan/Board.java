@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Board extends JPanel {
-    private int height;
-    private int width;
+    private final int height;
+    private final int width;
     private Game game;
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection();
@@ -22,10 +22,10 @@ public class Board extends JPanel {
     boolean[][] booleanArray = MyFileReader.createPacManMap();
     public static final int elementSize = 50;
     private final int pacManSize = 40;
-    private int smallFoodSize = 4;
-    private int boosterSize = 10;
-    private int ghostSize = 40;
-    private int playerLifeSize = 18;
+    private final int smallFoodSize = 4;
+    private final int boosterSize = 10;
+    private final int ghostSize = 40;
+    private final int playerLifeSize = 18;
     private List<FoodSprite> foodSpriteList = new ArrayList<>();
     private final PacManSprite pacMan;
     private List<GhostSprite> ghostSpriteList = new ArrayList<>();
@@ -75,7 +75,6 @@ public class Board extends JPanel {
             }
         });
 
-
         int delay = 1;
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
@@ -99,15 +98,12 @@ public class Board extends JPanel {
             }
         });
         movementTimer.start();
-
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         // TODO add another food component between each already existing food component
-
         int counter = 0;
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
@@ -115,7 +111,7 @@ public class Board extends JPanel {
                     g.setColor(Color.blue);
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
-                    if (checkIfPacManIsEatenByGhosts()) {
+                    if (CheckIfPacManAndGhostsAreTouching()) {
                         resetGame();
                     }
                     checkIfFoodIsEaten();
@@ -163,7 +159,6 @@ public class Board extends JPanel {
         }
     }
 
-
     private void fillFoodSpriteList() {
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
@@ -180,7 +175,6 @@ public class Board extends JPanel {
             ghostSpriteList.get(i).setTravelDirection(new TravelDirection());
         }
     }
-
 
     private void createRandomNumbersList() {
         randomNumbersList = new ArrayList();
@@ -205,7 +199,6 @@ public class Board extends JPanel {
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() > 5
                     && foodSpriteList.get(i).getCoordinate().getX() - pacMan.getCoordinate().getX() < 25) {
                 foodSpriteList.get(i).setEaten(true);
-
                 if (foodSpriteList.get(i).isBooster()) {
                     foodSpriteList.get(i).setBooster(false);
                     pacMan.setBoosted(true);
@@ -214,7 +207,7 @@ public class Board extends JPanel {
         }
     }
 
-    private boolean checkIfPacManIsEatenByGhosts() {
+    private boolean CheckIfPacManAndGhostsAreTouching() {
         for (int i = 0; i < numberOfGhostSprites; i++) {
             if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
                 if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getX(), ghostSpriteList.get(i).getCoordinate().getX())) {
@@ -227,9 +220,9 @@ public class Board extends JPanel {
             } else {
                 for (int j = 0; j < ghostSpriteList.size(); j++) {
                     if (doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY()) ||
-                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY() + 30) ||
-                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY()) ||
-                    doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY() + 30)) {
+                            doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY() + 30) ||
+                            doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY()) ||
+                            doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY() + 30)) {
                         return true;
                     }
                 }
@@ -238,7 +231,7 @@ public class Board extends JPanel {
         return false;
     }
 
-    private boolean doPacManAndGhostTouchWhileSharingSameXOrY (int pacXOrY, int ghostXOrY) {
+    private boolean doPacManAndGhostTouchWhileSharingSameXOrY(int pacXOrY, int ghostXOrY) {
         if (pacXOrY - 38 == ghostXOrY || pacXOrY + 38 == ghostXOrY
                 || pacXOrY - 39 == ghostXOrY || pacXOrY + 39 == ghostXOrY) {
             playerLives--;

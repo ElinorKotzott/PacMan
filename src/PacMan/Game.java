@@ -108,7 +108,7 @@ public class Game {
     }
 
 
-    public Direction determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
+    public void determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
         List<Direction> possibleDirectionsList = new ArrayList<>();
 
         if (canSpriteMoveDown(booleanArray, ghostSprite) && ghostSprite.getTravelDirection().getDirection() != Direction.UP) {
@@ -125,23 +125,19 @@ public class Game {
         }
 
         if (possibleDirectionsList.isEmpty()) {
-            if (ghostSprite.getTravelDirection().getDirection() == Direction.UP) {
-                possibleDirectionsList.add(Direction.DOWN);
-            }
-            if (ghostSprite.getTravelDirection().getDirection() == Direction.DOWN) {
-                possibleDirectionsList.add(Direction.UP);
-            }
-            if (ghostSprite.getTravelDirection().getDirection() == Direction.RIGHT) {
-                possibleDirectionsList.add(Direction.LEFT);
-            }
-            if (ghostSprite.getTravelDirection().getDirection() == Direction.LEFT) {
-                possibleDirectionsList.add(Direction.RIGHT);
-            }
+            addDirectionToDirectionsListIfListIsEmpty(ghostSprite, possibleDirectionsList, Direction.UP, Direction.DOWN);
+            addDirectionToDirectionsListIfListIsEmpty(ghostSprite, possibleDirectionsList, Direction.DOWN, Direction.UP);
+            addDirectionToDirectionsListIfListIsEmpty(ghostSprite, possibleDirectionsList, Direction.RIGHT, Direction.LEFT);
+            addDirectionToDirectionsListIfListIsEmpty(ghostSprite, possibleDirectionsList, Direction.LEFT, Direction.RIGHT);
         }
-
         ghostSprite.getTravelDirection().setDirection(possibleDirectionsList.get(r.nextInt(possibleDirectionsList.size())));
-        return ghostSprite.getTravelDirection().getDirection();
+    }
 
+
+    private void addDirectionToDirectionsListIfListIsEmpty(MovingSprite ghostSprite, List<Direction> possibleDirectionsList, Direction d1, Direction d2) {
+        if (ghostSprite.getTravelDirection().getDirection() == d1) {
+            possibleDirectionsList.add(d2);
+        }
     }
 
     public void moveGhostSprite(boolean[][] booleanArray, MovingSprite ghostSprite) {
