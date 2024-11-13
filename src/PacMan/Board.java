@@ -113,9 +113,8 @@ public class Board extends JPanel {
                 } else {
                     if (CheckIfPacManAndGhostsAreTouching()) {
                         if (!pacMan.isBoosted()) {
-                        resetGame();
-                        }
-                        else {
+                            resetGame();
+                        } else {
 // TODO continue here
                         }
                     }
@@ -149,8 +148,7 @@ public class Board extends JPanel {
         for (int i = 0; i < ghostSpriteList.size(); i++) {
             if (!ghostSpriteList.get(i).isDead()) {
                 g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
-            }
-            else {
+            } else {
                 resetDeadGhostSprite(i);
                 g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
             }
@@ -170,7 +168,7 @@ public class Board extends JPanel {
         }
     }
 
-    private void resetDeadGhostSprite (int i) {
+    private void resetDeadGhostSprite(int i) {
         ghostSpriteList.get(i).getCoordinate().setX(155);
         ghostSpriteList.get(i).getCoordinate().setY(205);
         ghostSpriteList.get(i).setDead(false);
@@ -252,7 +250,7 @@ public class Board extends JPanel {
         return false;
     }
 
-    private void setGhostSpriteToDeadIfPacManIsBoosted (int i) {
+    private void setGhostSpriteToDeadIfPacManIsBoosted(int i) {
         if (pacMan.isBoosted()) {
             ghostSpriteList.get(i).setDead(true);
         }
@@ -262,9 +260,11 @@ public class Board extends JPanel {
     private boolean doPacManAndGhostTouchWhileSharingSameXOrY(int pacXOrY, int ghostXOrY) {
         if (pacXOrY - 38 == ghostXOrY || pacXOrY + 38 == ghostXOrY
                 || pacXOrY - 39 == ghostXOrY || pacXOrY + 39 == ghostXOrY) {
-            playerLives--;
-            if (playerLives == 0) {
-                gameOver = true;
+            if (!pacMan.isBoosted()) {
+                playerLives--;
+                if (playerLives == 0) {
+                    gameOver = true;
+                }
             }
             return true;
         }
@@ -276,9 +276,11 @@ public class Board extends JPanel {
                 pacX <= ghostSpriteList.get(j).getCoordinate().getX() + 35 &&
                 pacY >= ghostSpriteList.get(j).getCoordinate().getY() + 5 &&
                 pacY <= ghostSpriteList.get(j).getCoordinate().getY() + 35) {
-            playerLives--;
-            if (playerLives == 0) {
-                gameOver = true;
+            if (!pacMan.isBoosted()) {
+                playerLives--;
+                if (playerLives == 0) {
+                    gameOver = true;
+                }
             }
             return true;
         }
