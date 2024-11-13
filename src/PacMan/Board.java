@@ -18,7 +18,7 @@ public class Board extends JPanel {
     private Game game;
     private Timer movementTimer;
     private TravelDirection travelDirection = new TravelDirection();
-    private int moveDirection;
+    private Integer moveDirection;
     boolean[][] booleanArray = MyFileReader.createPacManMap();
     public static final int elementSize = 50;
     private final int pacManSize = 40;
@@ -79,8 +79,10 @@ public class Board extends JPanel {
         movementTimer = new Timer(delay, e -> {
             if (!gameOver) {
                 game.movePacMan(moveDirection, booleanArray, pacMan, travelDirection);
-                for (int i = 0; i < ghostSpriteList.size(); i++) {
-                    game.moveGhostSprite(booleanArray, ghostSpriteList.get(i));
+                for (GhostSprite ghostSprite : ghostSpriteList) {
+                    if (!ghostSprite.isRespawning()) {
+                        game.moveGhostSprite(booleanArray, ghostSprite);
+                    }
                 }
                 repaint();
             } else {
@@ -91,9 +93,19 @@ public class Board extends JPanel {
             }
             if (pacMan.isBoosted()) {
                 boostedPacManCounter++;
-                if (boostedPacManCounter == 300.000) {
+                if (boostedPacManCounter == 400.000) {
                     pacMan.setBoosted(false);
                     boostedPacManCounter = 0;
+                }
+            }
+            // TODO sometimes all ghost sprites respawn when pac man only ate one of them. if pac man eats two of them within a short time, both will respawn simultaneously
+            for (GhostSprite ghostSprite : ghostSpriteList) {
+                if (ghostSprite.isRespawning()) {
+                    ghostSprite.setRespawningCounter(ghostSprite.getRespawningCounter() + 1);
+                    if (ghostSprite.getRespawningCounter() == 150.000) {
+                        ghostSprite.setRespawning(false);
+                        ghostSprite.setRespawningCounter(0);
+                    }
                 }
             }
         });
@@ -103,7 +115,6 @@ public class Board extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // TODO add another food component between each already existing food component
         int counter = 0;
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
@@ -111,12 +122,8 @@ public class Board extends JPanel {
                     g.setColor(Color.blue);
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
-                    if (CheckIfPacManAndGhostsAreTouching()) {
-                        if (!pacMan.isBoosted()) {
-                            resetGame();
-                        } else {
-// TODO continue here
-                        }
+                    if (CheckIfPacManAndGhostsAreTouching() && !pacMan.isBoosted()) {
+                        resetGame();
                     }
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
@@ -146,12 +153,13 @@ public class Board extends JPanel {
 
         g.setColor(Color.green);
         for (int i = 0; i < ghostSpriteList.size(); i++) {
-            if (!ghostSpriteList.get(i).isDead()) {
-                g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
-            } else {
+            if (ghostSpriteList.get(i).isRespawning()) {
+                g.setColor(Color.red);
+            } else if (ghostSpriteList.get(i).isDead()) {
                 resetDeadGhostSprite(i);
-                g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
             }
+            g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
+            g.setColor(Color.green);
         }
 
         if (checkIfIsWin()) {
@@ -172,6 +180,7 @@ public class Board extends JPanel {
         ghostSpriteList.get(i).getCoordinate().setX(155);
         ghostSpriteList.get(i).getCoordinate().setY(205);
         ghostSpriteList.get(i).setDead(false);
+        ghostSpriteList.get(i).setRespawning(true);
     }
 
     private void fillFoodSpriteList() {
@@ -288,7 +297,7 @@ public class Board extends JPanel {
     }
 
 
-    public boolean checkIfIsWin() {
+    private boolean checkIfIsWin() {
         for (int i = 0; i < foodSpriteList.size(); i++) {
             if (!foodSpriteList.get(i).isEaten()) {
                 return false;
@@ -298,7 +307,7 @@ public class Board extends JPanel {
         return true;
     }
 
-    public void paintWinnerMessage(Graphics g) {
+    private void paintWinnerMessage(Graphics g) {
         g.setColor(Color.white);
         String winnerMessage = "Congrats, you won!";
         Font font = new Font("Arial", Font.BOLD, 30);
@@ -309,7 +318,7 @@ public class Board extends JPanel {
         g.drawString(winnerMessage, x, y);
     }
 
-    public void paintLoserMessage(Graphics g) {
+    private void paintLoserMessage(Graphics g) {
         g.setColor(Color.white);
         String loserMessage = "Game over!";
         Font font = new Font("Arial", Font.BOLD, 30);
@@ -326,13 +335,14 @@ public class Board extends JPanel {
         }
     }
 
-    public void resetGame() {
+    private void resetGame() {
         pacMan.getCoordinate().setX(455);
         pacMan.getCoordinate().setY(205);
+        moveDirection = null;
 
-        for (int i = 0; i < ghostSpriteList.size(); i++) {
-            ghostSpriteList.get(i).getCoordinate().setX(155);
-            ghostSpriteList.get(i).getCoordinate().setY(205);
+        for (GhostSprite ghostSprite : ghostSpriteList) {
+            ghostSprite.getCoordinate().setX(155);
+            ghostSprite.getCoordinate().setY(205);
         }
 
     }

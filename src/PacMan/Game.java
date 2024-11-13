@@ -16,7 +16,11 @@ public class Game {
         this.r = r;
     }
 
-    public void movePacMan(int moveDirection, boolean[][] booleanArray, MovingSprite pacMan, TravelDirection d) {
+    public void movePacMan(Integer moveDirection, boolean[][] booleanArray, MovingSprite pacMan, TravelDirection d) {
+
+        if (moveDirection == null) {
+            return;
+        }
 
         switch (moveDirection) {
             case KeyEvent.VK_LEFT -> {
