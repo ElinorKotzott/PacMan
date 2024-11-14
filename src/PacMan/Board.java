@@ -20,7 +20,7 @@ public class Board extends JPanel {
     private TravelDirection travelDirection = new TravelDirection();
     private Integer moveDirection;
     boolean[][] booleanArray = MyFileReader.createPacManMap();
-    public static final int elementSize = 50;
+    public static final int ELEMENT_SIZE = 50;
     private final int pacManSize = 40;
     private final int smallFoodSize = 4;
     private final int boosterSize = 10;
@@ -34,9 +34,11 @@ public class Board extends JPanel {
     private List<Integer> randomNumbersList;
     private boolean gameOver;
     private int freezePaintingCounter = 0;
+    private static final int MAX_FREEZE_PAINTING_COUNTER = 150;
     private final Random r = new Random();
     private int playerLives = 3;
     private int boostedPacManCounter = 0;
+    private static final int MAX_BOOSTED_PAC_MAN_COUNTER = 450;
 
 
     public Board(int height, int width) {
@@ -90,26 +92,23 @@ public class Board extends JPanel {
                 repaint();
             } else {
                 freezePaintingCounter++;
-                if (freezePaintingCounter == 150.000) {
+                if (freezePaintingCounter == MAX_FREEZE_PAINTING_COUNTER) {
                     System.exit(0);
                 }
             }
             if (pacMan.isBoosted()) {
                 boostedPacManCounter++;
-                if (boostedPacManCounter == 800.000) {
+                if (boostedPacManCounter == MAX_BOOSTED_PAC_MAN_COUNTER) {
                     pacMan.setBoosted(false);
                     boostedPacManCounter = 0;
                 }
             }
-            // TODO FIX: sometimes all ghost sprites respawn when pac man only ate one of them. if pac man eats two of them within a short time, both will respawn simultaneously.
-            //  if he eats a ghost when it's respawning, another one will be respawning. sometimes ghosts travel on top of pacMan without any of them dying - this happens when the wrong ghost respawns
             for (GhostSprite ghostSprite : ghostSpriteList) {
                 if (ghostSprite.isRespawning()) {
                     ghostSprite.setRespawningCounter(ghostSprite.getRespawningCounter() + 1);
-                    if (ghostSprite.getRespawningCounter() == 200.000) {
+                    if (ghostSprite.getRespawningCounter() == GhostSprite.getMaxRespawningCounter()) {
                         ghostSprite.setRespawning(false);
                         ghostSprite.setRespawningCounter(0);
-
                     }
                 }
             }
@@ -125,7 +124,7 @@ public class Board extends JPanel {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (booleanArray[i][j]) {
                     g.setColor(Color.blue);
-                    g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
+                    g.fillRect(j * ELEMENT_SIZE, i * ELEMENT_SIZE, ELEMENT_SIZE, ELEMENT_SIZE);
                 } else {
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
@@ -137,8 +136,8 @@ public class Board extends JPanel {
                     if (!foodSpriteList.get(counter).isBooster()) {
                         g.fillOval(foodSpriteList.get(counter).getCoordinate().getY(), foodSpriteList.get(counter).getCoordinate().getX(), smallFoodSize, smallFoodSize);
                     } else {
-                        foodSpriteList.get(counter).getCoordinate().setX(i * elementSize + elementSize / 2 - boosterSize / 2);
-                        foodSpriteList.get(counter).getCoordinate().setY(j * elementSize + elementSize / 2 - boosterSize / 2);
+                        foodSpriteList.get(counter).getCoordinate().setX(i * ELEMENT_SIZE + ELEMENT_SIZE / 2 - boosterSize / 2);
+                        foodSpriteList.get(counter).getCoordinate().setY(j * ELEMENT_SIZE + ELEMENT_SIZE / 2 - boosterSize / 2);
                         g.fillOval(foodSpriteList.get(counter).getCoordinate().getY(), foodSpriteList.get(counter).getCoordinate().getX(), boosterSize, boosterSize);
                     }
                     counter++;
@@ -155,9 +154,10 @@ public class Board extends JPanel {
 
         g.setColor(Color.green);
         for (GhostSprite ghostSprite : ghostSpriteList) {
-            if (ghostSprite.isRespawning()) {
+            if (ghostSprite.isRespawning() && !ghostSprite.isFlashingCounter()) {
                 g.setColor(Color.red);
             }
+            ghostSprite.setFlashingCounter(!ghostSprite.isFlashingCounter());
             g.fillOval(ghostSprite.getCoordinate().getY(), ghostSprite.getCoordinate().getX(), ghostSize, ghostSize);
             g.setColor(Color.green);
         }
@@ -188,7 +188,7 @@ public class Board extends JPanel {
         for (int i = 0; i < booleanArray.length; i++) {
             for (int j = 0; j < booleanArray[i].length; j++) {
                 if (!booleanArray[i][j]) {
-                    foodSpriteList.add(new FoodSprite(i * elementSize + elementSize / 2 - smallFoodSize / 2, j * elementSize + elementSize / 2 - smallFoodSize / 2));
+                    foodSpriteList.add(new FoodSprite(i * ELEMENT_SIZE + ELEMENT_SIZE / 2 - smallFoodSize / 2, j * ELEMENT_SIZE + ELEMENT_SIZE / 2 - smallFoodSize / 2));
                 }
             }
         }

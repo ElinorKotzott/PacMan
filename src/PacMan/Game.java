@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static PacMan.Board.elementSize;
+import static PacMan.Board.ELEMENT_SIZE;
 
 public class Game {
     private final Random r;
@@ -90,23 +90,23 @@ public class Game {
     }
 
     private boolean canSpriteMoveDown(boolean[][] booleanArray, MovingSprite sprite) {
-        return !booleanArray[(sprite.getCoordinate().getX() + 45) / elementSize][(sprite.getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(sprite.getCoordinate().getX() + 45) / elementSize][(sprite.getCoordinate().getY() + 44) / elementSize];
+        return !booleanArray[(sprite.getCoordinate().getX() + 45) / ELEMENT_SIZE][(sprite.getCoordinate().getY() - 5) / ELEMENT_SIZE]
+                && !booleanArray[(sprite.getCoordinate().getX() + 45) / ELEMENT_SIZE][(sprite.getCoordinate().getY() + 44) / ELEMENT_SIZE];
     }
 
     private boolean canSpriteMoveUp(boolean[][] booleanArray, MovingSprite sprite) {
-        return !booleanArray[(sprite.getCoordinate().getX() - 6) / elementSize][(sprite.getCoordinate().getY() - 5) / elementSize]
-                && !booleanArray[(sprite.getCoordinate().getX() - 6) / elementSize][((sprite.getCoordinate().getY()) + 44) / elementSize];
+        return !booleanArray[(sprite.getCoordinate().getX() - 6) / ELEMENT_SIZE][(sprite.getCoordinate().getY() - 5) / ELEMENT_SIZE]
+                && !booleanArray[(sprite.getCoordinate().getX() - 6) / ELEMENT_SIZE][((sprite.getCoordinate().getY()) + 44) / ELEMENT_SIZE];
     }
 
     private boolean canSpriteMoveRight(boolean[][] booleanArray, MovingSprite sprite) {
-        return !booleanArray[(sprite.getCoordinate().getX() - 5) / elementSize][(sprite.getCoordinate().getY() + 45) / elementSize]
-                && !booleanArray[(sprite.getCoordinate().getX() + 44) / elementSize][(sprite.getCoordinate().getY() + 45) / elementSize];
+        return !booleanArray[(sprite.getCoordinate().getX() - 5) / ELEMENT_SIZE][(sprite.getCoordinate().getY() + 45) / ELEMENT_SIZE]
+                && !booleanArray[(sprite.getCoordinate().getX() + 44) / ELEMENT_SIZE][(sprite.getCoordinate().getY() + 45) / ELEMENT_SIZE];
     }
 
     private boolean canSpriteMoveLeft(boolean[][] booleanArray, MovingSprite sprite) {
-        return !booleanArray[(sprite.getCoordinate().getX() - 5) / elementSize][(sprite.getCoordinate().getY() - 6) / elementSize]
-                && !booleanArray[(sprite.getCoordinate().getX() + 44) / elementSize][(sprite.getCoordinate().getY() - 6) / elementSize];
+        return !booleanArray[(sprite.getCoordinate().getX() - 5) / ELEMENT_SIZE][(sprite.getCoordinate().getY() - 6) / ELEMENT_SIZE]
+                && !booleanArray[(sprite.getCoordinate().getX() + 44) / ELEMENT_SIZE][(sprite.getCoordinate().getY() - 6) / ELEMENT_SIZE];
     }
 
     public void determineGhostSpritesTravelDirection(boolean[][] booleanArray, MovingSprite ghostSprite) {
