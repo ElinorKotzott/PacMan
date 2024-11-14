@@ -84,6 +84,9 @@ public class Board extends JPanel {
                         game.moveGhostSprite(booleanArray, ghostSprite);
                     }
                 }
+                if (CheckIfPacManAndGhostsAreTouching() && !pacMan.isBoosted()) {
+                    resetGame();
+                }
                 repaint();
             } else {
                 freezePaintingCounter++;
@@ -93,18 +96,20 @@ public class Board extends JPanel {
             }
             if (pacMan.isBoosted()) {
                 boostedPacManCounter++;
-                if (boostedPacManCounter == 400.000) {
+                if (boostedPacManCounter == 800.000) {
                     pacMan.setBoosted(false);
                     boostedPacManCounter = 0;
                 }
             }
-            // TODO sometimes all ghost sprites respawn when pac man only ate one of them. if pac man eats two of them within a short time, both will respawn simultaneously
+            // TODO FIX: sometimes all ghost sprites respawn when pac man only ate one of them. if pac man eats two of them within a short time, both will respawn simultaneously.
+            //  if he eats a ghost when it's respawning, another one will be respawning. sometimes ghosts travel on top of pacMan without any of them dying - this happens when the wrong ghost respawns
             for (GhostSprite ghostSprite : ghostSpriteList) {
                 if (ghostSprite.isRespawning()) {
                     ghostSprite.setRespawningCounter(ghostSprite.getRespawningCounter() + 1);
-                    if (ghostSprite.getRespawningCounter() == 150.000) {
+                    if (ghostSprite.getRespawningCounter() == 200.000) {
                         ghostSprite.setRespawning(false);
                         ghostSprite.setRespawningCounter(0);
+
                     }
                 }
             }
@@ -122,9 +127,6 @@ public class Board extends JPanel {
                     g.setColor(Color.blue);
                     g.fillRect(j * elementSize, i * elementSize, elementSize, elementSize);
                 } else {
-                    if (CheckIfPacManAndGhostsAreTouching() && !pacMan.isBoosted()) {
-                        resetGame();
-                    }
                     checkIfFoodIsEaten();
                     if (foodSpriteList.get(counter).isEaten()) {
                         counter++;
@@ -152,13 +154,11 @@ public class Board extends JPanel {
         g.fillOval(pacMan.getCoordinate().getY(), pacMan.getCoordinate().getX(), pacManSize, pacManSize);
 
         g.setColor(Color.green);
-        for (int i = 0; i < ghostSpriteList.size(); i++) {
-            if (ghostSpriteList.get(i).isRespawning()) {
+        for (GhostSprite ghostSprite : ghostSpriteList) {
+            if (ghostSprite.isRespawning()) {
                 g.setColor(Color.red);
-            } else if (ghostSpriteList.get(i).isDead()) {
-                resetDeadGhostSprite(i);
             }
-            g.fillOval(ghostSpriteList.get(i).getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getX(), ghostSize, ghostSize);
+            g.fillOval(ghostSprite.getCoordinate().getY(), ghostSprite.getCoordinate().getX(), ghostSize, ghostSize);
             g.setColor(Color.green);
         }
 
@@ -176,11 +176,12 @@ public class Board extends JPanel {
         }
     }
 
-    private void resetDeadGhostSprite(int i) {
-        ghostSpriteList.get(i).getCoordinate().setX(155);
-        ghostSpriteList.get(i).getCoordinate().setY(205);
-        ghostSpriteList.get(i).setDead(false);
-        ghostSpriteList.get(i).setRespawning(true);
+    private void respawnGhostSpriteIfPacManIsBoosted(int i) {
+        if (pacMan.isBoosted()) {
+            ghostSpriteList.get(i).getCoordinate().setX(155);
+            ghostSpriteList.get(i).getCoordinate().setY(205);
+            ghostSpriteList.get(i).setRespawning(true);
+        }
     }
 
     private void fillFoodSpriteList() {
@@ -233,15 +234,18 @@ public class Board extends JPanel {
     }
 
     private boolean CheckIfPacManAndGhostsAreTouching() {
-        for (int i = 0; i < numberOfGhostSprites; i++) {
+        for (int i = 0; i < ghostSpriteList.size(); i++) {
+           if (ghostSpriteList.get(i).isRespawning()) {
+                continue;
+            }
             if (pacMan.getCoordinate().getY() == ghostSpriteList.get(i).getCoordinate().getY()) {
                 if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getX(), ghostSpriteList.get(i).getCoordinate().getX())) {
-                    setGhostSpriteToDeadIfPacManIsBoosted(i);
+                    respawnGhostSpriteIfPacManIsBoosted(i);
                     return true;
                 }
             } else if (pacMan.getCoordinate().getX() == ghostSpriteList.get(i).getCoordinate().getX()) {
                 if (doPacManAndGhostTouchWhileSharingSameXOrY(pacMan.getCoordinate().getY(), ghostSpriteList.get(i).getCoordinate().getY())) {
-                    setGhostSpriteToDeadIfPacManIsBoosted(i);
+                    respawnGhostSpriteIfPacManIsBoosted(i);
                     return true;
                 }
             } else {
@@ -250,19 +254,13 @@ public class Board extends JPanel {
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX(), pacMan.getCoordinate().getY() + 30) ||
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY()) ||
                             doPacManAndGhostsTouchWhileNotSharingSameXOrY(j, pacMan.getCoordinate().getX() + 30, pacMan.getCoordinate().getY() + 30)) {
-                        setGhostSpriteToDeadIfPacManIsBoosted(i);
+                        respawnGhostSpriteIfPacManIsBoosted(j);
                         return true;
                     }
                 }
             }
         }
         return false;
-    }
-
-    private void setGhostSpriteToDeadIfPacManIsBoosted(int i) {
-        if (pacMan.isBoosted()) {
-            ghostSpriteList.get(i).setDead(true);
-        }
     }
 
 
